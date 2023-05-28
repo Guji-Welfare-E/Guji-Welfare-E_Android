@@ -6,7 +6,7 @@
     <data>
         <variable
             name="main"
-            type="com.guji.welfare.guji_welfare_e_android.ui.activity.MainActivity" />
+            type="com.guji.welfare.guji_welfare_e_android.MainActivity" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
