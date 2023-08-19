@@ -22,5 +22,5 @@ class login2 : Fragment() {
         return inflater.inflate(R.layout.fragment_login2, container, false)
     }
 
-
+// TODO: 권한 받기, 다음 프레그먼트로 이동
 }
