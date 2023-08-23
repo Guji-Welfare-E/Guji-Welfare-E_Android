@@ -1,10 +1,15 @@
 package com.guji.welfare.guji_welfare_e_android.loginFreagment
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.guji.welfare.guji_welfare_e_android.MainActivity
 import com.guji.welfare.guji_welfare_e_android.databinding.FragmentLogin1Binding
 import com.guji.welfare.guji_welfare_e_android.databinding.FragmentLogin3Binding
 
@@ -17,7 +22,7 @@ class login3 : Fragment() {
         binding = FragmentLogin3Binding.inflate(inflater, container, false)
         binding.okBtn.setOnClickListener {
             var fragment = requireActivity().supportFragmentManager.findFragmentByTag("login3")
-            // TODO: 권한 받기
+            onAuthority()
             if (fragment != null) {
                 requireActivity().supportFragmentManager.beginTransaction().remove(fragment).commit()
             }
@@ -26,14 +31,23 @@ class login3 : Fragment() {
             System.exit(0)
         }
         binding.enterBtn.setOnClickListener {
-            //TODO:ok랑 다르점 알아보기
             var fragment = requireActivity().supportFragmentManager.findFragmentByTag("login3")
+            onAuthority()
             if (fragment != null) {
                 requireActivity().supportFragmentManager.beginTransaction().remove(fragment).commit()
             }
         }
 
         return binding.root
+    }
+    fun onAuthority(){
+        var mainContext = (activity as MainActivity)
+        val systemAlertWindwpermission = Manifest.permission.SYSTEM_ALERT_WINDOW
+
+        if (ContextCompat.checkSelfPermission(mainContext, systemAlertWindwpermission) == PackageManager.PERMISSION_DENIED) {
+            val SYSTEM_ALERT_WINDOW = 4
+            ActivityCompat.requestPermissions(mainContext, arrayOf(systemAlertWindwpermission), SYSTEM_ALERT_WINDOW)
+        }
     }
 
 
