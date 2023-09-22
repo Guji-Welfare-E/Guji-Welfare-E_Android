@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="15dp"
+    android:paddingEnd="30dp"
+    android:paddingStart="30dp"
+    android:background="@drawable/background_dialog">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="담당 복지사 등록"
+        android:textColor="#00BE1E"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/appCompatEditText"
+        android:layout_width="190dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background_edittext"
+        android:fontFamily="@font/pretendard_bold"
+        android:gravity="center"
+        android:hint="복지사 전화번호"
+        android:maxLines="1"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView16" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="* 인터넷에 연결되어 있어야 합니다"
+        android:textColor="#FF2A2A"
+        android:textSize="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatEditText" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="170dp"
+        android:layout_height="30dp"
+        android:background="@drawable/background_dialog_button"
+        android:backgroundTint="#C2C2C2"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="담당자 등록"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView18" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
