@@ -1,6 +1,7 @@
 package com.guji.welfare.guji_welfare_e_android.base
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
@@ -22,7 +23,6 @@ abstract class BaseListAdapter<T : Any, VDB : ViewDataBinding>(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-
         holder.itemView.setOnClickListener{
             itemClickListener.onClick(it,position)
         }

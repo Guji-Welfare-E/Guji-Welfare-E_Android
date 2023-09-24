@@ -1,6 +1,7 @@
 package com.guji.welfare.guji_welfare_e_android.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,6 @@ abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>(
 //    protected open val hasBottomNavigation: Boolean = false
 
     protected abstract fun start()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +41,7 @@ abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>(
 //        binding.setVariable(BR.vm, viewModel)
         binding.lifecycleOwner = this
         binding.executePendingBindings()
+
     }
 
     override fun onDestroy() {
