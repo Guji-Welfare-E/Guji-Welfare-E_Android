@@ -9,15 +9,18 @@ import com.guji.welfare.guji_welfare_e_android.base.BaseListAdapter
 import com.guji.welfare.guji_welfare_e_android.databinding.ItemGuardiaInformationBinding
 import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
 import com.guji.welfare.guji_welfare_e_android.main.screen.MainActivity
+import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
 
 class GuardianInformationListAdapter :
     BaseListAdapter<GuardianInformationData, ItemGuardiaInformationBinding>(
         R.layout.item_guardia_information
-    ), BaseListAdapter.OnItemClickListener  {
+    ) {
     override fun action(data: GuardianInformationData, binding: ItemGuardiaInformationBinding) {
-        binding.name.text = data.name
-        binding.phoneNumber.text = data.phoneNumber
-        binding.relationship.text = data.relationship
+        with(binding) {
+            name.text = data.name
+            phoneNumber.text = data.phoneNumber
+            relationship.text = data.relationship
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -30,7 +33,27 @@ class GuardianInformationListAdapter :
         )
     }
 
-    override fun onClick(v: View, position: Int) {
-
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        with(holder) {
+            itemView.setOnClickListener(OnSingleClickListener {
+                itemClickListener.onClick(it, position)
+            })
+            binding.callButton.setOnClickListener(OnSingleClickListener {
+                itemClickListener.onClickCall(it, position)
+            })
+        }
     }
+
+    interface OnItemClickListener {
+        fun onClick(v: View, position: Int)
+
+        fun onClickCall(v: View, position: Int)
+    }
+
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.itemClickListener = onItemClickListener
+    }
+
+    private lateinit var itemClickListener: OnItemClickListener
+
 }

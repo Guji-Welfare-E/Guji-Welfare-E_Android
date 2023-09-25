@@ -16,29 +16,11 @@ abstract class BaseListAdapter<T : Any, VDB : ViewDataBinding>(
 
     abstract fun action(data: T, binding: VDB)
 
-    inner class BaseViewHolder(private val binding: VDB) : RecyclerView.ViewHolder(binding.root) {
+    inner class BaseViewHolder(val binding: VDB) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: T) {
             action(item, binding)
         }
     }
-
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.itemView.setOnClickListener{
-            itemClickListener.onClick(it,position)
-        }
-
-        return holder.bind(getItem(position))
-    }
-
-    interface OnItemClickListener {
-        fun onClick(v: View, position: Int)
-    }
-
-    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
-        this.itemClickListener = onItemClickListener
-    }
-
-    private lateinit var itemClickListener : OnItemClickListener
 
 }
 
