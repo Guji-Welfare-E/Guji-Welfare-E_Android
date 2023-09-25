@@ -15,18 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.main.MainActivity">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/button"
+                android:id="@+id/button_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#00000000"
-                android:src="@drawable/ic_menu"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:backgroundTint="#00000000"
+                android:src="@drawable/ic_menu"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -54,7 +55,7 @@
                     android:background="@drawable/background_frame">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView"
+                        android:id="@+id/my_name_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -67,6 +68,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/my_nickname_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -74,8 +76,8 @@
                         android:text="신기하게 뛰어가는 강아지"
                         android:textColor="@color/black"
                         android:textSize="18dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
-                        app:layout_constraintStart_toEndOf="@+id/appCompatTextView" />
+                        app:layout_constraintBottom_toBottomOf="@+id/my_name_text"
+                        app:layout_constraintStart_toEndOf="@+id/my_name_text" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -90,6 +92,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/my_dwelling_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_medium"
@@ -97,18 +100,20 @@
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/appCompatTextView"
-                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
+                        app:layout_constraintStart_toStartOf="@+id/my_name_text"
+                        app:layout_constraintTop_toBottomOf="@+id/my_name_text" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:paddingBottom="20dp"
                     android:background="@drawable/background_frame">
 
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/appCompatTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -120,50 +125,104 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView2"
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/welfare_worker_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="이찬혁"
-                        android:textColor="@color/black"
-                        android:textSize="25sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="010-2113-9159"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView2"
-                        app:layout_constraintStart_toEndOf="@+id/appCompatTextView2" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="구지면 행복 복지관"
-                        android:textColor="#525252"
-                        android:textSize="13sp"
-                        app:layout_constraintStart_toStartOf="@+id/appCompatTextView2"
-                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/button_call"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:src="@drawable/ic_phone_call"
-                        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView3"
+                        android:layout_marginTop="15dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/appCompatTextView2" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/welfare_worker_name_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:text="이찬혁"
+                            android:textColor="@color/black"
+                            android:textSize="25sp"
+                            app:layout_constraintBottom_toTopOf="@+id/welfare_worker_department_text"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/welfare_worker_phone_number_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:text="010-2113-9159"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/welfare_worker_name_text"
+                            app:layout_constraintStart_toEndOf="@+id/welfare_worker_name_text" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/welfare_worker_department_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:text="구지면 행복 복지관"
+                            android:textColor="#525252"
+                            android:textSize="13sp"
+                            app:layout_constraintStart_toStartOf="@+id/welfare_worker_name_text"
+                            app:layout_constraintTop_toBottomOf="@+id/welfare_worker_name_text" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/welfare_worker_button_call"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="20dp"
+                            android:src="@drawable/ic_phone_call"
+                            app:layout_constraintBottom_toBottomOf="@+id/welfare_worker_department_text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/welfare_worker_name_text" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/welfare_worker_null_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:text="등록된 담당자가 없습니다!"
+                            android:textColor="#4D4D4D"
+                            android:textSize="25sp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:text="복지 대상자만 사용가능한 기능입니다."
+                            android:textColor="#4D4D4D"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/welfare_worker_add_button"
+                            android:layout_width="170dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="10dp"
+                            android:backgroundTint="#00E625"
+                            android:fontFamily="@font/pretendard_bold"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:text="담당자 등록"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -171,6 +230,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/background_frame"
                     android:orientation="vertical"
                     android:paddingStart="20sp"
@@ -214,15 +274,15 @@
                         android:id="@+id/empty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_bold"
                         android:text="등록된 보호자가 없습니다"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/pretendard_bold"/>
+                        android:textSize="25sp" />
 
                     <Button
-                        android:id="@+id/button_add"
+                        android:id="@+id/button_guardian_add"
                         android:layout_width="170dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_horizontal"
@@ -245,8 +305,8 @@
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:overScrollMode="never"
-            android:background="@drawable/background_drawer">
+            android:background="@drawable/background_drawer"
+            android:overScrollMode="never">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/button_close"
