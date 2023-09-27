@@ -39,6 +39,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     private val guardianInformationDecoration = GuardianInformationDecoration()
     private val guardiaInformationAdapter = GuardianInformationListAdapter()
 
+    private val permission: Array<String> = arrayOf(
+        android.Manifest.permission.CALL_PHONE,
+        android.Manifest.permission.SEND_SMS,
+        android.Manifest.permission.READ_CONTACTS
+    )
+
+
     override fun start() {
         ActivityCompat.requestPermissions(this, permission, 0)
 
