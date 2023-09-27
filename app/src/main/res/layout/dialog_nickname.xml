@@ -53,6 +53,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView19" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretendard_bold"
@@ -88,6 +89,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appCompatTextView18">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_yes"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:background="@drawable/background_dialog_button"
@@ -98,6 +100,7 @@
             android:textSize="13sp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_no"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_marginStart="10dp"

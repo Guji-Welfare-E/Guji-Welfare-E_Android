@@ -55,7 +55,7 @@
                     android:background="@drawable/background_frame">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/my_name_text"
+                        android:id="@+id/text_my_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="30dp"
@@ -68,7 +68,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/my_nickname_text"
+                        android:id="@+id/text_my_nickname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -76,8 +76,8 @@
                         android:text="신기하게 뛰어가는 강아지"
                         android:textColor="@color/black"
                         android:textSize="18dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/my_name_text"
-                        app:layout_constraintStart_toEndOf="@+id/my_name_text" />
+                        app:layout_constraintBottom_toBottomOf="@+id/text_my_name"
+                        app:layout_constraintStart_toEndOf="@+id/text_my_name" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/my_dwelling_text"
+                        android:id="@+id/text_my_dwelling"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_medium"
@@ -100,8 +100,8 @@
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/my_name_text"
-                        app:layout_constraintTop_toBottomOf="@+id/my_name_text" />
+                        app:layout_constraintStart_toStartOf="@+id/text_my_name"
+                        app:layout_constraintTop_toBottomOf="@+id/text_my_name" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -126,7 +126,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/welfare_worker_layout"
+                        android:id="@+id/layout_welfare_worker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -135,7 +135,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/welfare_worker_name_text"
+                            android:id="@+id/text_welfare_worker_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="30dp"
@@ -143,12 +143,12 @@
                             android:text="이찬혁"
                             android:textColor="@color/black"
                             android:textSize="25sp"
-                            app:layout_constraintBottom_toTopOf="@+id/welfare_worker_department_text"
+                            app:layout_constraintBottom_toTopOf="@+id/text_welfare_worker_department"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/welfare_worker_phone_number_text"
+                            android:id="@+id/text_welfare_worker_phone_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
@@ -156,33 +156,33 @@
                             android:text="010-2113-9159"
                             android:textColor="@color/black"
                             android:textSize="15sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/welfare_worker_name_text"
-                            app:layout_constraintStart_toEndOf="@+id/welfare_worker_name_text" />
+                            app:layout_constraintBottom_toBottomOf="@+id/text_welfare_worker_name"
+                            app:layout_constraintStart_toEndOf="@+id/text_welfare_worker_name" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/welfare_worker_department_text"
+                            android:id="@+id/text_welfare_worker_department"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/pretendard_bold"
                             android:text="구지면 행복 복지관"
                             android:textColor="#525252"
                             android:textSize="13sp"
-                            app:layout_constraintStart_toStartOf="@+id/welfare_worker_name_text"
-                            app:layout_constraintTop_toBottomOf="@+id/welfare_worker_name_text" />
+                            app:layout_constraintStart_toStartOf="@+id/text_welfare_worker_name"
+                            app:layout_constraintTop_toBottomOf="@+id/text_welfare_worker_name" />
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/welfare_worker_button_call"
+                            android:id="@+id/button_welfare_worker_call"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="20dp"
                             android:src="@drawable/ic_phone_call"
-                            app:layout_constraintBottom_toBottomOf="@+id/welfare_worker_department_text"
+                            app:layout_constraintBottom_toBottomOf="@+id/text_welfare_worker_department"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/welfare_worker_name_text" />
+                            app:layout_constraintTop_toTopOf="@+id/text_welfare_worker_name" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/welfare_worker_null_layout"
+                        android:id="@+id/layout_welfare_worker_null"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -209,7 +209,7 @@
                             android:textSize="15sp" />
 
                         <Button
-                            android:id="@+id/welfare_worker_add_button"
+                            android:id="@+id/button_welfare_worker_add"
                             android:layout_width="170dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_horizontal"
@@ -369,12 +369,12 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/SwitchCompat"
+                        app:layout_constraintEnd_toStartOf="@+id/switch_auto_background"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/SwitchCompat"
+                        android:id="@+id/switch_auto_background"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
@@ -395,7 +395,7 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView7"
+                        android:id="@+id/text_my_information"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_extrabold"
@@ -403,12 +403,12 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/switch2"
+                        app:layout_constraintEnd_toStartOf="@+id/switch_my_information"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/switch2"
+                        android:id="@+id/switch_my_information"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
@@ -428,7 +428,7 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView6"
+                        android:id="@+id/text_welfareworker_information"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_extrabold"
@@ -436,12 +436,12 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/switch1"
+                        app:layout_constraintEnd_toStartOf="@+id/switch_welfareworker_information"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/switch1"
+                        android:id="@+id/switch_welfareworker_information"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
@@ -468,12 +468,12 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/switch3"
+                        app:layout_constraintEnd_toStartOf="@+id/switch_guardian_information"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/switch3"
+                        android:id="@+id/switch_guardian_information"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
@@ -500,7 +500,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView9"
+                android:id="@+id/button_change_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -510,23 +510,10 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
+                app:layout_constraintTop_toBottomOf="@id/view"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_extrabold"
-                android:text="담당자 변경"
-                android:textColor="#FF1B1B"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView9" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView11"
+                android:id="@+id/button_change_Welfareworker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -536,10 +523,10 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView10" />
+                app:layout_constraintTop_toBottomOf="@+id/button_change_nickname" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView12"
+                android:id="@+id/button_change_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -549,10 +536,23 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView11" />
+                app:layout_constraintTop_toBottomOf="@+id/button_change_Welfareworker" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView13"
+                android:id="@+id/button_change_information"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/pretendard_extrabold"
+                android:text="개인정보 변경"
+                android:textColor="#FF1B1B"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_change_password"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/button_secession"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -561,8 +561,10 @@
                 android:textColor="#FF1B1B"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_change_information"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView12" />
+                app:layout_constraintBottom_toTopOf="@id/view2"/>
+
 
             <View
                 android:id="@+id/view2"
@@ -574,7 +576,7 @@
                 android:background="#7E7E7E"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView13" />
+                app:layout_constraintTop_toBottomOf="@+id/button_secession" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
