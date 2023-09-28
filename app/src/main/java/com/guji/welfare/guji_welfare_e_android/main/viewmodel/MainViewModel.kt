@@ -1,21 +1,24 @@
 package com.guji.welfare.guji_welfare_e_android.main.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.guji.welfare.guji_welfare_e_android.base.ListLiveData
 import com.guji.welfare.guji_welfare_e_android.base.BaseViewModel
 import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
 
-class MainViewModel: BaseViewModel(){
+class MainViewModel : BaseViewModel() {
 
     private val _guardianInformationList = ListLiveData<GuardianInformationData>()
     val guardianInformationList: ListLiveData<GuardianInformationData>
         get() = _guardianInformationList
 
-    private val _welfareworker =  MutableLiveData<String>()
-    val welfareworker: LiveData<String>
-        get() = _welfareworker
+    val switchMyInformationStatus = MutableLiveData(true)
+    val switchGuardianInformationStatus = MutableLiveData(true)
+    val switchWelfareworkerInformationStatus = MutableLiveData(true)
+
+    fun setMyName(name: String){
+        _myName.value = name
+    }
 
     fun setWelfareworker(phoneNumber: String){
         _welfareworker.value = phoneNumber

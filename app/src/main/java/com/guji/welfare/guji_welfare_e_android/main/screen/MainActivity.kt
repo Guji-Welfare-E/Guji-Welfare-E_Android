@@ -107,7 +107,47 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             buttonChangeWelfareworker.setOnClickListener { setDialogWelfareworkerRegistration() }
             buttonChangePassword.setOnClickListener { setDialogCheckChangePassword() }
             buttonSecession.setOnClickListener { }
-            buttonChangeInformation.setOnClickListener { }
+
+        }
+
+        binding.textMyName.text = App.prefs.myName ?: ""
+        binding.textMyNickname.text = App.prefs.myNickname ?: ""
+        binding.textMyDwelling.text = App.prefs.myDwelling ?: ""
+
+        with(viewModel){
+            myName.observe(this@MainActivity){
+                App.prefs.myName = binding.textMyName.text.toString()
+            }
+
+            myDwelling.observe(this@MainActivity){
+                App.prefs.myDwelling = binding.textMyDwelling.text.toString()
+            }
+
+
+            welfareworkerName.observe(this@MainActivity){
+                App.prefs.welfareWorkerName = binding.textWelfareWorkerName.text.toString()
+            }
+            welfareworkerPhoneNumber.observe(this@MainActivity){
+                App.prefs.welfareWorkerPhoneNumber = binding.textWelfareWorkerPhoneNumber.text.toString()
+            }
+            welfareworkerAffiliation.observe(this@MainActivity){
+                App.prefs.welfareworkerAffiliation = binding.textWelfareWorkerAffiliation.text.toString()
+            }
+
+            viewModel.switchMyInformationStatus.observe(this@MainActivity){
+                if (!it) binding.layoutMyInformation.visibility = View.GONE
+                else binding.layoutMyInformation.visibility = View.VISIBLE
+            }
+
+            viewModel.switchGuardianInformationStatus.observe(this@MainActivity){
+                if (!it) binding.layoutGuardianInformation.visibility = View.GONE
+                else binding.layoutGuardianInformation.visibility = View.VISIBLE
+            }
+
+            viewModel.switchWelfareworkerInformationStatus.observe(this@MainActivity){
+                if (!it) binding.frameWelfareWorkerInformation.visibility = View.GONE
+                else binding.frameWelfareWorkerInformation.visibility = View.VISIBLE
+            }
 
         }
 
