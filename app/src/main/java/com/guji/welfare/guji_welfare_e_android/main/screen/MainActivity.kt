@@ -16,17 +16,18 @@ import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseActivity
 import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityMainBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.DialogChangePassword
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangePassword
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardanInformationFix
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformationAdd
-import com.guji.welfare.guji_welfare_e_android.dialog.DialogNickname
-import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectCall
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectNickName
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangeNickName
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogWelfareworkerRegistration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.DiseaseDisorderInformationListAdapter
 import com.guji.welfare.guji_welfare_e_android.main.adapter.GuardianInformationListAdapter
+import com.guji.welfare.guji_welfare_e_android.main.adapter.data.DiseaseDisorderInformationData
 import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
+import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.DiseaseDisorderInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.GuardianInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.viewmodel.MainViewModel
 
@@ -37,9 +38,37 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     override val viewModel: MainViewModel by viewModels()
 
-    private val explanationData = arrayListOf<GuardianInformationData>()
-    private val guardianInformationDecoration = GuardianInformationDecoration()
+    private var requestLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data: Intent? = result.data
+                data?.data?.let { contactUri ->
+                    val cursor = contentResolver.query(
+                        contactUri, arrayOf(
+                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                            ContactsContract.CommonDataKinds.Phone.NUMBER
+                        ), null, null, null
+                    )
+                    cursor?.use {
+                        if (it.moveToFirst()) {
+                            val name = it.getString(0)
+                            val phoneNumber = it.getString(1)
+                            Log.d("연락처", "name: $name, phone: $phoneNumber")
+                            // 여기에서 phoneNumber를 사용하거나 다른 처리를 수행할 수 있습니다.
+                        }
+                    }
+                }
+            }
+        }
+
+
+    private val guardianListData = arrayListOf<GuardianInformationData>()
     private val guardiaInformationAdapter = GuardianInformationListAdapter()
+    private val guardianInformationDecoration = GuardianInformationDecoration()
+
+    private val diseaseDisorderListData = arrayListOf<DiseaseDisorderInformationData>()
+    private val diseaseDisorderInformationListAdapter = DiseaseDisorderInformationListAdapter()
+    private val diseaseDisorderInformationDecoration = DiseaseDisorderInformationDecoration()
 
     private val permission: Array<String> = arrayOf(
         android.Manifest.permission.CALL_PHONE,
@@ -52,60 +81,60 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         ActivityCompat.requestPermissions(this, permission, 0)
 
         val behavior = BottomSheetBehavior.from(binding.bottomSheet)
-        behavior.peekHeight = 450
+        behavior.peekHeight = 1400
 
         guardiaInformationAdapter.setItemClickListener(this)
+        diseaseDisorderInformationListAdapter.setItemClickListener(this)
 
         with(binding) {
 
             //recyclerView
-            recyclerView.layoutManager = LinearLayoutManager(MainActivity())
-            recyclerView.adapter = guardiaInformationAdapter
-            recyclerView.addItemDecoration(guardianInformationDecoration)
+            recyclerViewGuardian.layoutManager = LinearLayoutManager(MainActivity())
+            recyclerViewGuardian.adapter = guardiaInformationAdapter
+            recyclerViewGuardian.addItemDecoration(guardianInformationDecoration)
+
+            recyclerViewDiseaseDisorder.layoutManager = LinearLayoutManager(MainActivity())
+            recyclerViewDiseaseDisorder.adapter = diseaseDisorderInformationListAdapter
+            recyclerViewDiseaseDisorder.addItemDecoration(diseaseDisorderInformationDecoration)
+
+
             layoutWelfareWorker.visibility = View.GONE
 
-            //My Information
-            textMyName.text = App.prefs.myName?:""
-            textMyNickname.text = App.prefs.nickname?:""
-            textMyDwelling.text = App.prefs.dwelling?:""
 
             //drawerLayout open, close
             buttonClose.setOnClickListener { binding.drawer.closeDrawer(GravityCompat.END) }
             buttonMenu.setOnClickListener { binding.drawer.openDrawer(GravityCompat.END) }
 
+
             //Add
             buttonGuardianAdd.setOnClickListener { setDialogGuardianInformationAdd() }
             buttonWelfareWorkerAdd.setOnClickListener { }
 
+
             //call
-            buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.phoneNumber.toString()) }
+            buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.welfareWorkerPhoneNumber.toString()) }
+
 
             //switch
             switchAutoBackground.setOnClickListener {
-                Log.d(
-                    "스위치", switchAutoBackground.isChecked.toString()
-                )
+
             }
             switchGuardianInformation.setOnClickListener {
-                Log.d(
-                    "스위치", switchGuardianInformation.isChecked.toString()
-                )
+                viewModel.switchGuardianInformationStatus.value = binding.switchGuardianInformation.isChecked
             }
             switchMyInformation.setOnClickListener {
-                Log.d(
-                    "스위치", switchMyInformation.isChecked.toString()
-                )
+                viewModel.switchMyInformationStatus.value = binding.switchMyInformation.isChecked
             }
             switchWelfareworkerInformation.setOnClickListener {
-                Log.d(
-                    "스위치", switchWelfareworkerInformation.isChecked.toString()
-                )
+                viewModel.switchWelfareworkerInformationStatus.value = binding.switchWelfareworkerInformation.isChecked
             }
 
+
             //drawer button
-            buttonChangeNickname.setOnClickListener { setDialogNickname(App.prefs.nickname.toString()) }
+            buttonChangeNickname.setOnClickListener { setDialogNickname(App.prefs.myNickname.toString()) }
             buttonChangeWelfareworker.setOnClickListener { setDialogWelfareworkerRegistration() }
             buttonChangePassword.setOnClickListener { setDialogCheckChangePassword() }
+            buttonChangeInformation.setOnClickListener { }
             buttonSecession.setOnClickListener { }
 
         }
@@ -153,11 +182,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
         viewModel.guardianInformationList.observe(this) {
             checkEmpty(it)
-            guardiaInformationAdapter.submitList(explanationData)
+            guardiaInformationAdapter.submitList(guardianListData)
         }
 
-        viewModel.welfareworker.observe(this) {
-            Log.d("담당 복지사 등록", it)
+        viewModel.welfareworkerName.observe(this) {
+
         }
 
     }
@@ -215,7 +244,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogSelectCall(phoneNumber: String) {
-        val dialogSelectCall = DialogSelectCall(phoneNumber)
+        val dialogSelectCall = DialogCheckChangeNickName(phoneNumber)
         with(dialogSelectCall) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "selectCall")
@@ -223,17 +252,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogNickname(nickname: String) {
-        val dialogNickname = DialogNickname(nickname)
+        val dialogNickname = DialogSelectNickName(nickname)
         with(dialogNickname) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "nickname")
         }
     }
 
-    private fun setDialogCheckChangePassword(){
-        Log.d("클릭","클릭")
+    private fun setDialogCheckChangePassword() {
         val dialogCheckChangePassword = DialogCheckChangePassword()
-        with(dialogCheckChangePassword){
+        with(dialogCheckChangePassword) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "checkChangePassword")
         }
@@ -245,14 +273,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     private fun checkEmpty(data: MutableList<GuardianInformationData>) {
         if (data.size == 0) {
-            Log.d("checkEmpty", "숨기기")
-            binding.recyclerView.visibility = View.GONE
-            binding.empty.visibility = View.VISIBLE
+            binding.recyclerViewGuardian.visibility = View.GONE
+            binding.emptyGuardian.visibility = View.VISIBLE
         } else {
-            Log.d("checkEmpty", "나타내기")
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.empty.visibility = View.GONE
+            binding.recyclerViewGuardian.visibility = View.VISIBLE
+            binding.emptyGuardian.visibility = View.GONE
         }
+    }
+    fun changePassword(password: String) {
+
     }
 
 
