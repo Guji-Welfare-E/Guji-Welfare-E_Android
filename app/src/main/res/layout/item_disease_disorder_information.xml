@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="diseaseDisorder"
+            type="com.guji.welfare.guji_welfare_e_android.main.adapter.viewmodel.DiseaseDisorderInformationViewModel" />
+    </data>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/text_disease_disorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="질병이름"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pretendard_bold"/>
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#5E5E5E"
+            android:text="YYYY/MM/DD"
+            android:fontFamily="@font/pretendard_bold"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+</layout>
+
