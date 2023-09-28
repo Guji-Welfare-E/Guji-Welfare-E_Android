@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
     <data>
-    <variable
-        name="dialogGuardianInformation"
-        type="com.guji.welfare.guji_welfare_e_android.main.screen.MainActivity" />
+        <variable
+            name="dialogNickName"
+            type="com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogChangeNickNameViewModel" />
     </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/background_dialog"
@@ -20,78 +20,76 @@
             android:id="@+id/appCompatTextView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="별칭 새로 만들기"
             style="@style/Title"
-            android:text="보호자 정보"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/linearLayoutCompat2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView16">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/text_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pretendard_bold"
-                android:text="황주완"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView16" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/button_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:src="@drawable/ic_delete" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <TextView
-            android:id="@+id/text_relationship"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="아들"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/linearLayoutCompat2"
-            app:layout_constraintStart_toStartOf="@+id/linearLayoutCompat2"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat2" />
-
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/text_phoneNumber"
+            android:id="@+id/appCompatTextView19"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:fontFamily="@font/pretendard_bold"
-            android:text="010-1234-5678"
+            android:text="별칭을 새로 만드시겠습니까?"
+            android:layout_marginTop="10dp"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_relationship" />
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView16" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView19">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="현재 별칭 : "
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView19" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="신기하게 뛰어가는 강아지"
+                android:textColor="#FF8A00"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="* 인터넷에 연결되어 있어야 합니다"
+            style="@style/WarningMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_phoneNumber">
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView18">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_yes"
@@ -118,7 +116,6 @@
 
 
         </LinearLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
