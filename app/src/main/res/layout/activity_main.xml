@@ -45,261 +45,315 @@
                 android:paddingStart="20dp"
                 android:paddingTop="20dp"
                 android:paddingEnd="20dp"
-                android:paddingBottom="5dp"
                 app:layout_behavior="@string/bottom_sheet_behavior">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/my_information_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:background="@drawable/background_frame">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/text_my_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="김명준"
-                        android:textColor="@color/black"
-                        android:textSize="36sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/text_my_nickname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="신기하게 뛰어가는 강아지"
-                        android:textColor="@color/black"
-                        android:textSize="18dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/text_my_name"
-                        app:layout_constraintStart_toEndOf="@+id/text_my_name" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="내 정보"
-                        android:textColor="#00C01E"
-                        android:textSize="17sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/text_my_dwelling"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendard_medium"
-                        android:text="대구광역시 달성군 구지면 창리로11길 93"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/text_my_name"
-                        app:layout_constraintTop_toBottomOf="@+id/text_my_name" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:paddingBottom="20dp"
-                    android:background="@drawable/background_frame">
+                    android:overScrollMode="never"
+                    app:cardCornerRadius="16dp">
 
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="담당 복지사 정보"
-                        android:textColor="#00C01E"
-                        android:textSize="17sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/layout_welfare_worker"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
+                        android:orientation="vertical">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/text_welfare_worker_name"
-                            android:layout_width="wrap_content"
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/my_information_frame"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp"
-                            android:fontFamily="@font/pretendard_bold"
-                            android:text="이찬혁"
-                            android:textColor="@color/black"
-                            android:textSize="25sp"
-                            app:layout_constraintBottom_toTopOf="@+id/text_welfare_worker_department"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            android:background="@drawable/background_frame"
+                            android:paddingBottom="20dp">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/text_welfare_worker_phone_number"
-                            android:layout_width="wrap_content"
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_my_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="김명준"
+                                android:textColor="@color/black"
+                                android:textSize="36sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_my_nickname"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="신기하게 뛰어가는 강아지"
+                                android:textColor="@color/black"
+                                android:textSize="18dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/text_my_name"
+                                app:layout_constraintStart_toEndOf="@+id/text_my_name" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="내 정보"
+                                android:textColor="#00C01E"
+                                android:textSize="17sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_my_dwelling"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/pretendard_medium"
+                                android:text="대구광역시 달성군 구지면 창리로11길 93"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/text_my_name"
+                                app:layout_constraintTop_toBottomOf="@+id/text_my_name" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:fontFamily="@font/pretendard_bold"
-                            android:text="010-2113-9159"
-                            android:textColor="@color/black"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/text_welfare_worker_name"
-                            app:layout_constraintStart_toEndOf="@+id/text_welfare_worker_name" />
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/background_frame"
+                            android:paddingBottom="20dp">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/text_welfare_worker_department"
-                            android:layout_width="wrap_content"
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/appCompatTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="담당 복지사 정보"
+                                android:textColor="#00C01E"
+                                android:textSize="17sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/layout_welfare_worker"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text_welfare_worker_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="30dp"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="이찬혁"
+                                    android:textColor="@color/black"
+                                    android:textSize="25sp"
+                                    app:layout_constraintBottom_toTopOf="@+id/text_welfare_worker_department"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text_welfare_worker_phone_number"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="010-2113-9159"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/text_welfare_worker_name"
+                                    app:layout_constraintStart_toEndOf="@+id/text_welfare_worker_name" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text_welfare_worker_department"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="구지면 행복 복지관"
+                                    android:textColor="#525252"
+                                    android:textSize="13sp"
+                                    app:layout_constraintStart_toStartOf="@+id/text_welfare_worker_name"
+                                    app:layout_constraintTop_toBottomOf="@+id/text_welfare_worker_name" />
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:id="@+id/button_welfare_worker_call"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="20dp"
+                                    android:src="@drawable/ic_phone_call"
+                                    app:layout_constraintBottom_toBottomOf="@+id/text_welfare_worker_department"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/text_welfare_worker_name" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/layout_welfare_worker_null"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="등록된 담당자가 없습니다!"
+                                    android:textColor="#4D4D4D"
+                                    android:textSize="25sp" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:text="복지 대상자만 사용가능한 기능입니다."
+                                    android:textColor="#4D4D4D"
+                                    android:textSize="15sp" />
+
+                                <Button
+                                    android:id="@+id/button_welfare_worker_add"
+                                    android:layout_width="170dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginTop="10dp"
+                                    android:backgroundTint="#00E625"
+                                    android:fontFamily="@font/pretendard_bold"
+                                    android:minWidth="0dp"
+                                    android:minHeight="0dp"
+                                    android:text="담당자 등록"
+                                    android:textColor="@color/white"
+                                    android:textSize="13sp" />
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/pretendard_bold"
-                            android:text="구지면 행복 복지관"
-                            android:textColor="#525252"
-                            android:textSize="13sp"
-                            app:layout_constraintStart_toStartOf="@+id/text_welfare_worker_name"
-                            app:layout_constraintTop_toBottomOf="@+id/text_welfare_worker_name" />
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/background_frame"
+                            android:orientation="vertical"
+                            android:paddingStart="20sp"
+                            android:paddingEnd="20sp"
+                            android:paddingBottom="20dp">
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/button_welfare_worker_call"
-                            android:layout_width="wrap_content"
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/appCompatTextView4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="보호자 정보"
+                                android:textColor="#00C01E"
+                                android:textSize="17sp" />
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_view_guardian"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:overScrollMode="never" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/empty_guardian"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="등록된 보호자가 없습니다!"
+                                android:textColor="@color/black"
+                                android:textSize="25sp" />
+
+                            <Button
+                                android:id="@+id/button_guardian_add"
+                                android:layout_width="170dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="10dp"
+                                android:backgroundTint="#00E625"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:minWidth="0dp"
+                                android:minHeight="0dp"
+                                android:text="보호자 추가"
+                                android:textColor="@color/white"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_disease_disorder"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="20dp"
-                            android:src="@drawable/ic_phone_call"
-                            app:layout_constraintBottom_toBottomOf="@+id/text_welfare_worker_department"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/text_welfare_worker_name" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="15dp"
+                            android:background="@drawable/background_frame"
+                            android:orientation="vertical"
+                            android:paddingStart="20sp"
+                            android:paddingEnd="20sp">
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/layout_welfare_worker_null"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_disease_disorder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="질병/장애 정보"
+                                android:textColor="#00C01E"
+                                android:textSize="17sp" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/pretendard_bold"
-                            android:text="등록된 담당자가 없습니다!"
-                            android:textColor="#4D4D4D"
-                            android:textSize="25sp" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_view_disease_disorder"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:overScrollMode="never" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/pretendard_bold"
-                            android:text="복지 대상자만 사용가능한 기능입니다."
-                            android:textColor="#4D4D4D"
-                            android:textSize="15sp" />
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/empty_disease_disorder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:text="등록된 장애 정보가 없습니다!"
+                                android:textColor="@color/black"
+                                android:textSize="25sp" />
 
-                        <Button
-                            android:id="@+id/button_welfare_worker_add"
-                            android:layout_width="170dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="#00E625"
-                            android:fontFamily="@font/pretendard_bold"
-                            android:minWidth="0dp"
-                            android:minHeight="0dp"
-                            android:text="담당자 등록"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
+                            <Button
+                                android:id="@+id/button_disease_disorder_add"
+                                android:layout_width="170dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:backgroundTint="#00E625"
+                                android:fontFamily="@font/pretendard_bold"
+                                android:minWidth="0dp"
+                                android:minHeight="0dp"
+                                android:text="질병 정보 추가"
+                                android:textColor="@color/white"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
 
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/background_frame"
-                    android:orientation="vertical"
-                    android:paddingStart="20sp"
-                    android:paddingEnd="20sp">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/appCompatTextView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="보호자 정보"
-                        android:textColor="#00C01E"
-                        android:textSize="17sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <!--            <androidx.appcompat.widget.AppCompatTextView-->
-                    <!--                android:layout_width="wrap_content"-->
-                    <!--                android:layout_height="wrap_content"-->
-                    <!--                android:layout_gravity="center"-->
-                    <!--                android:layout_marginTop="10dp"-->
-                    <!--                android:fontFamily="@font/pretendard_bold"-->
-                    <!--                android:text="등록된 정보가 없습니다"-->
-                    <!--                android:textColor="#4D4D4D"-->
-                    <!--                android:textSize="20sp" />-->
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:overScrollMode="never"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView4" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/empty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="등록된 보호자가 없습니다"
-                        android:textColor="@color/black"
-                        android:textSize="25sp" />
-
-                    <Button
-                        android:id="@+id/button_guardian_add"
-                        android:layout_width="170dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:backgroundTint="#00E625"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        android:text="보호자 추가"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
 
             </LinearLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+        <!--drawer layout-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main_drawer_view"
             android:layout_width="250dp"
@@ -510,7 +564,7 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view"/>
+                app:layout_constraintTop_toBottomOf="@id/view" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/button_change_Welfareworker"
@@ -549,7 +603,7 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_change_password"/>
+                app:layout_constraintTop_toBottomOf="@+id/button_change_password" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/button_secession"
@@ -560,10 +614,10 @@
                 android:text="회원 탈퇴"
                 android:textColor="#FF1B1B"
                 android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/view2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_change_information"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/view2"/>
+                app:layout_constraintTop_toBottomOf="@+id/button_change_information" />
 
 
             <View
