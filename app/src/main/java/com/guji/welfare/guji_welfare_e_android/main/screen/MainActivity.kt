@@ -24,6 +24,7 @@ import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformationA
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogNickname
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectCall
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogWelfareworkerRegistration
+import com.guji.welfare.guji_welfare_e_android.main.adapter.DiseaseDisorderInformationListAdapter
 import com.guji.welfare.guji_welfare_e_android.main.adapter.GuardianInformationListAdapter
 import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.GuardianInformationDecoration
@@ -31,6 +32,7 @@ import com.guji.welfare.guji_welfare_e_android.main.viewmodel.MainViewModel
 
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main),
+    DiseaseDisorderInformationListAdapter.OnItemClickListener,
     GuardianInformationListAdapter.OnItemClickListener {
 
     override val viewModel: MainViewModel by viewModels()
@@ -126,9 +128,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogGuardianInformation(position: Int) {
-        val name = explanationData[position].name
-        val relationship = explanationData[position].relationship
-        val phoneNumber = explanationData[position].phoneNumber
+        val name = guardianListData[position].name
+        val relationship = guardianListData[position].relationship
+        val phoneNumber = guardianListData[position].phoneNumber
         val dialogGuardianInformation = DialogGuardianInformation(name, relationship, phoneNumber)
         with(dialogGuardianInformation) {
             isCancelable = false
@@ -164,8 +166,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogSelectCall(position: Int) {
-        val phoneNumber = explanationData[position].phoneNumber
-        val dialogSelectCall = DialogSelectCall(phoneNumber)
+        val phoneNumber = guardianListData[position].phoneNumber
+        val dialogSelectCall = DialogCheckChangeNickName(phoneNumber)
         with(dialogSelectCall) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "selectCall")
@@ -213,19 +215,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-        }
-        binding.buttonClose.setOnClickListener {
-//            binding.mainDrawerView.
-        }
-        binding.button.setOnClickListener {
-            setDialogGuardianInformation()
-        }
+
+
+    override fun onClick(v: View, position: Int) {
+        setDialogGuardianInformation(position)
     }
 
-    private fun setDialogGuardianInformation(){
-        val dialogGuardianInformation = DialogGuardianInformation("name","relationship","phoneNumber")
-        dialogGuardianInformation.isCancelable = false
-        dialogGuardianInformation.show(this.supportFragmentManager,"")
+    override fun onClickCall(v: View, position: Int) {
+        setDialogSelectCall(position)
     }
 
 }
