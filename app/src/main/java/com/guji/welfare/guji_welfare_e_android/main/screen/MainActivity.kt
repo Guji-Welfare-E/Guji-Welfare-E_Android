@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -78,6 +79,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
 
     override fun start() {
+        installSplashScreen()
+
         ActivityCompat.requestPermissions(this, permission, 0)
 
         val behavior = BottomSheetBehavior.from(binding.bottomSheet)
@@ -86,8 +89,68 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         guardiaInformationAdapter.setItemClickListener(this)
         diseaseDisorderInformationListAdapter.setItemClickListener(this)
 
-        with(binding) {
+        setAdapter()
+        setClickListener()
 
+        binding.textMyName.text = App.prefs.myName
+        binding.textMyNickname.text = App.prefs.myNickname
+        binding.textMyDwelling.text = App.prefs.myDwelling
+
+        with(viewModel) {
+            myName.observe(this@MainActivity) {
+                App.prefs.myName = binding.textMyName.text.toString()
+                binding.textMyName.text = App.prefs.myName
+            }
+
+            myDwelling.observe(this@MainActivity) {
+                App.prefs.myDwelling = binding.textMyDwelling.text.toString()
+                binding.textMyDwelling.text = App.prefs.myDwelling
+            }
+
+
+            welfareworkerName.observe(this@MainActivity) {
+                App.prefs.welfareWorkerName = binding.textWelfareWorkerName.text.toString()
+            }
+
+            welfareworkerPhoneNumber.observe(this@MainActivity) {
+                App.prefs.welfareWorkerPhoneNumber =
+                    binding.textWelfareWorkerPhoneNumber.text.toString()
+            }
+
+            welfareworkerAffiliation.observe(this@MainActivity) {
+                App.prefs.welfareworkerAffiliation =
+                    binding.textWelfareWorkerAffiliation.text.toString()
+            }
+
+            switchMyInformationStatus.observe(this@MainActivity) {
+                if (!it) binding.layoutMyInformation.visibility = View.GONE
+                else binding.layoutMyInformation.visibility = View.VISIBLE
+            }
+
+            switchGuardianInformationStatus.observe(this@MainActivity) {
+                if (!it) binding.layoutGuardianInformation.visibility = View.GONE
+                else binding.layoutGuardianInformation.visibility = View.VISIBLE
+            }
+
+            switchWelfareworkerInformationStatus.observe(this@MainActivity) {
+                if (!it) binding.frameWelfareWorkerInformation.visibility = View.GONE
+                else binding.frameWelfareWorkerInformation.visibility = View.VISIBLE
+            }
+
+            guardianInformationList.observe(this@MainActivity) {
+                checkEmpty(it)
+                guardiaInformationAdapter.submitList(guardianListData)
+            }
+            welfareworkerName.observe(this@MainActivity) {
+
+            }
+
+        }
+
+    }
+
+    private fun setAdapter() {
+        with(binding) {
             //recyclerView
             recyclerViewGuardian.layoutManager = LinearLayoutManager(MainActivity())
             recyclerViewGuardian.adapter = guardiaInformationAdapter
@@ -96,20 +159,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             recyclerViewDiseaseDisorder.layoutManager = LinearLayoutManager(MainActivity())
             recyclerViewDiseaseDisorder.adapter = diseaseDisorderInformationListAdapter
             recyclerViewDiseaseDisorder.addItemDecoration(diseaseDisorderInformationDecoration)
+        }
+    }
 
-
-            layoutWelfareWorker.visibility = View.GONE
-
-
-            //drawerLayout open, close
+    private fun setClickListener() {
+        with(binding){
             buttonClose.setOnClickListener { binding.drawer.closeDrawer(GravityCompat.END) }
             buttonMenu.setOnClickListener { binding.drawer.openDrawer(GravityCompat.END) }
 
-
             //Add
             buttonGuardianAdd.setOnClickListener { setDialogGuardianInformationAdd() }
-            buttonWelfareWorkerAdd.setOnClickListener { }
-
+            buttonWelfareWorkerAdd.setOnClickListener { setDialogWelfareworkerRegistration() }
 
             //call
             buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.welfareWorkerPhoneNumber.toString()) }
@@ -120,13 +180,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
             }
             switchGuardianInformation.setOnClickListener {
-                viewModel.switchGuardianInformationStatus.value = binding.switchGuardianInformation.isChecked
+                viewModel.switchGuardianInformationStatus.value =
+                    binding.switchGuardianInformation.isChecked
             }
             switchMyInformation.setOnClickListener {
                 viewModel.switchMyInformationStatus.value = binding.switchMyInformation.isChecked
             }
             switchWelfareworkerInformation.setOnClickListener {
-                viewModel.switchWelfareworkerInformationStatus.value = binding.switchWelfareworkerInformation.isChecked
+                viewModel.switchWelfareworkerInformationStatus.value =
+                    binding.switchWelfareworkerInformation.isChecked
             }
 
 
@@ -136,64 +198,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             buttonChangePassword.setOnClickListener { setDialogCheckChangePassword() }
             buttonChangeInformation.setOnClickListener { }
             buttonSecession.setOnClickListener { }
-
         }
-
-        binding.textMyName.text = App.prefs.myName ?: ""
-        binding.textMyNickname.text = App.prefs.myNickname ?: ""
-        binding.textMyDwelling.text = App.prefs.myDwelling ?: ""
-
-        with(viewModel){
-            myName.observe(this@MainActivity){
-                App.prefs.myName = binding.textMyName.text.toString()
-            }
-
-            myDwelling.observe(this@MainActivity){
-                App.prefs.myDwelling = binding.textMyDwelling.text.toString()
-            }
-
-
-            welfareworkerName.observe(this@MainActivity){
-                App.prefs.welfareWorkerName = binding.textWelfareWorkerName.text.toString()
-            }
-            welfareworkerPhoneNumber.observe(this@MainActivity){
-                App.prefs.welfareWorkerPhoneNumber = binding.textWelfareWorkerPhoneNumber.text.toString()
-            }
-            welfareworkerAffiliation.observe(this@MainActivity){
-                App.prefs.welfareworkerAffiliation = binding.textWelfareWorkerAffiliation.text.toString()
-            }
-
-            viewModel.switchMyInformationStatus.observe(this@MainActivity){
-                if (!it) binding.layoutMyInformation.visibility = View.GONE
-                else binding.layoutMyInformation.visibility = View.VISIBLE
-            }
-
-            viewModel.switchGuardianInformationStatus.observe(this@MainActivity){
-                if (!it) binding.layoutGuardianInformation.visibility = View.GONE
-                else binding.layoutGuardianInformation.visibility = View.VISIBLE
-            }
-
-            viewModel.switchWelfareworkerInformationStatus.observe(this@MainActivity){
-                if (!it) binding.frameWelfareWorkerInformation.visibility = View.GONE
-                else binding.frameWelfareWorkerInformation.visibility = View.VISIBLE
-            }
-
-        }
-
-        viewModel.guardianInformationList.observe(this) {
-            checkEmpty(it)
-            guardiaInformationAdapter.submitList(guardianListData)
-        }
-
-        viewModel.welfareworkerName.observe(this) {
-
-        }
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("상태", "onPause")
     }
 
     private fun setDialogGuardianInformation(position: Int) {
@@ -280,10 +285,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             binding.emptyGuardian.visibility = View.GONE
         }
     }
+
     fun changePassword(password: String) {
 
     }
-
 
 
     override fun onClick(v: View, position: Int) {
