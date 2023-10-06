@@ -5,6 +5,7 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,7 +17,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseActivity
 import com.guji.welfare.guji_welfare_e_android.App
+import com.guji.welfare.guji_welfare_e_android.account.screen.AccountActivity
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityMainBinding
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogChangePersonalInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangePassword
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardanInformationFix
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformation
@@ -163,7 +166,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setClickListener() {
-        with(binding){
+        with(binding) {
             buttonClose.setOnClickListener { binding.drawer.closeDrawer(GravityCompat.END) }
             buttonMenu.setOnClickListener { binding.drawer.openDrawer(GravityCompat.END) }
 
@@ -193,12 +196,31 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
 
             //drawer button
-            buttonChangeNickname.setOnClickListener { setDialogNickname(App.prefs.myNickname.toString()) }
+            buttonChangeNickname.setOnClickListener { setDialogNickname(App.prefs.myNickname) }
             buttonChangeWelfareworker.setOnClickListener { setDialogWelfareworkerRegistration() }
             buttonChangePassword.setOnClickListener { setDialogCheckChangePassword() }
-            buttonChangeInformation.setOnClickListener { }
-            buttonSecession.setOnClickListener { }
+            buttonChangeInformation.setOnClickListener { changeInformation() }
+            buttonSecession.setOnClickListener { secession() }
+            buttonLogout.setOnClickListener { logout() }
         }
+    }
+
+    private fun logout() {
+        App.prefs.remove()
+        Intent(this@MainActivity, AccountActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
+        Toast.makeText(this@MainActivity, "로그아웃됨", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun secession() {
+        //TODO("회원 탈퇴 로직")
+    }
+
+    private fun changeInformation(){
+        //TODO("개인정보 변경 로직")
+        setDialogChangePersonalInformation()
     }
 
     private fun setDialogGuardianInformation(position: Int) {
@@ -269,6 +291,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         with(dialogCheckChangePassword) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "checkChangePassword")
+        }
+    }
+
+    private fun setDialogChangePersonalInformation(){
+        val dialogChangePersonalInformation = DialogChangePersonalInformation()
+        with(dialogChangePersonalInformation){
+            isCancelable = false
+            show(this@MainActivity.supportFragmentManager, "changePersonalInformation")
         }
     }
 
