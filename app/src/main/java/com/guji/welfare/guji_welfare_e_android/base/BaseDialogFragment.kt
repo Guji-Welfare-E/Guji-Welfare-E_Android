@@ -31,6 +31,7 @@ abstract class BaseDialogFragment<B : ViewDataBinding, VM : BaseViewModel>(
         binding.lifecycleOwner = viewLifecycleOwner
         viewModel = ViewModelProvider(this)[getViewModelClass()]
         binding.setVariable(layoutRes, viewModel)
+        isCancelable = false
         return binding.root
     }
     override fun onDestroyView() {
