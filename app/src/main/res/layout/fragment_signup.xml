@@ -110,6 +110,7 @@
             android:gravity="center"
             android:hint="전화번호 확인"
             android:textColorHint="#BD9898"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edittext_phone_number" />
@@ -129,6 +130,21 @@
             app:layout_constraintTop_toBottomOf="@+id/editText" />
 
         <EditText
+            android:id="@+id/edittext_birthday"
+            style="@style/AccountEditText"
+            android:layout_width="285dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_account_edittext"
+            android:gravity="center"
+            android:hint="생년월일"
+            android:textColorHint="#BD9898"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+
+        <EditText
             android:id="@+id/edittext_password"
             style="@style/AccountEditText"
             android:layout_width="285dp"
@@ -140,7 +156,7 @@
             android:textColorHint="#BD9898"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edittext_dwelling" />
+            app:layout_constraintTop_toBottomOf="@+id/edittext_birthday" />
 
         <EditText
             android:id="@+id/editText2"

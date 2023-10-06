@@ -143,6 +143,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
+                                android:visibility="gone"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
@@ -620,10 +621,23 @@
                 android:text="회원 탈퇴"
                 android:textColor="#FF1B1B"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/view2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_change_information" />
+            
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/button_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/pretendard_extrabold"
+                android:text="로그아웃"
+                android:textColor="#FF1B1B"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/button_secession"
+                app:layout_constraintBottom_toTopOf="@id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
 
             <View
@@ -636,7 +650,7 @@
                 android:background="#7E7E7E"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_secession" />
+                app:layout_constraintTop_toBottomOf="@+id/button_logout" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
