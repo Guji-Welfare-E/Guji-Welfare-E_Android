@@ -26,6 +26,7 @@ import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformationAdd
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectNickName
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangeNickName
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogDiseaseAdd
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogWelfareworkerRegistration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.DiseaseDisorderInformationListAdapter
 import com.guji.welfare.guji_welfare_e_android.main.adapter.GuardianInformationListAdapter
@@ -173,6 +174,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             //Add
             buttonGuardianAdd.setOnClickListener { setDialogGuardianInformationAdd() }
             buttonWelfareWorkerAdd.setOnClickListener { setDialogWelfareworkerRegistration() }
+            buttonDiseaseDisorderAdd.setOnClickListener { setDialogDiseaseAdd() }
 
             //call
             buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.welfareWorkerPhoneNumber.toString()) }
@@ -193,7 +195,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                 viewModel.switchWelfareworkerInformationStatus.value =
                     binding.switchWelfareworkerInformation.isChecked
             }
-
 
             //drawer button
             buttonChangeNickname.setOnClickListener { setDialogNickname(App.prefs.myNickname) }
@@ -299,6 +300,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         with(dialogChangePersonalInformation){
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "changePersonalInformation")
+        }
+    }
+
+    private fun setDialogDiseaseAdd(){
+        val dialogDiseaseAdd = DialogDiseaseAdd()
+        with(dialogDiseaseAdd){
+            isCancelable = false
+            show(this@MainActivity.supportFragmentManager, "diseaseAdd")
         }
     }
 

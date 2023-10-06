@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_dialog"
         android:orientation="vertical"
+        android:paddingBottom="15dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
