@@ -25,9 +25,15 @@ class DialogSelectNickName(nickname: String) :
         with(binding) {
             textNickname.text = nickname
 
-            buttonYes.setOnClickListener { }
+            buttonYes.setOnClickListener { setDialogChangeNickName(); dismiss()}
             buttonNo.setOnClickListener { dismiss() }
         }
+    }
+
+    private fun setDialogChangeNickName(){
+        val dialogChangeNickName = DialogChangeNickName()
+        val fragmentManager = requireActivity().supportFragmentManager
+        dialogChangeNickName.show(fragmentManager, "changeNickName")
     }
 
 }
