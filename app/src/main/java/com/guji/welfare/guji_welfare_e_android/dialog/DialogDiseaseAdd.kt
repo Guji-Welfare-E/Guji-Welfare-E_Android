@@ -15,7 +15,8 @@ class DialogDiseaseAdd: BaseDialogFragment<DialogDiseaseAddBinding, DialogDiseas
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-
+            buttonNo.setOnClickListener { dismiss() }
+            buttonYes.setOnClickListener { TODO("적힌 질병을 내부 DB에 추가 및 UI에 추가, 서버에 전송, 만약 질병이 적혀있지 않다면 버튼 비활성화") }
         }
     }
 }
