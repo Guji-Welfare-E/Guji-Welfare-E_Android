@@ -88,11 +88,12 @@
             android:backgroundTint="#BFFF9C"
             android:fontFamily="@font/pretendard_bold"
             android:gravity="center"
+            android:layout_marginStart="10dp"
             android:hint="번호 찾기"
             android:maxLines="1"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/text_guardian_phone_number"
-            app:layout_constraintEnd_toEndOf="@+id/text_guardian_name"
+            app:layout_constraintStart_toEndOf="@+id/text_guardian_phone_number"
             app:layout_constraintTop_toTopOf="@+id/text_guardian_phone_number" />
 
         <androidx.appcompat.widget.AppCompatEditText

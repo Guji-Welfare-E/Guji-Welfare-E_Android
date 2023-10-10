@@ -1,7 +1,13 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.util.Log
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogGuardianInformationAddBinding
@@ -16,6 +22,8 @@ class DialogGuardianInformationAdd :
     private lateinit var name: String
     private lateinit var relationship: String
     private lateinit var phoneNumber: String
+    lateinit var requestLauncher: ActivityResultLauncher<Intent>
+
 
     override fun getViewModelClass(): Class<DialogGuardianInformationAddViewModel> =
         DialogGuardianInformationAddViewModel::class.java
@@ -30,20 +38,43 @@ class DialogGuardianInformationAdd :
                 dismiss()
             }
 
-            buttonNo.setOnClickListener{
+            buttonNo.setOnClickListener {
                 dismiss()
             }
 
             buttonFindPhoneNumber.setOnClickListener {
-                TODO("번호 찾기")
-                findPhoneNumber()
+                val intent =
+                    Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
+                requestLauncher.launch(intent)
             }
 
+            requestLauncher =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    if (it.resultCode == RESULT_OK) {
+                        val cursor = requireActivity().contentResolver.query(
+                            it.data!!.data!!,
+                            arrayOf(
+                                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                            ),
+                            null,
+                            null,
+                            null
+                        )
+                        Log.d("test", "cursor size : ${cursor?.count}")
+
+                        if (cursor!!.moveToFirst()) {
+                            val name = cursor.getString(0)
+                            val phone = cursor.getString(1)
+                            with(binding) {
+                                textGuardianName.setText(name)
+                                textGuardianPhoneNumber.setText(phone)
+                            }
+                        }
+                    }
+                }
+
         }
-    }
-
-    private fun findPhoneNumber(){
-
     }
 
 }
