@@ -7,6 +7,8 @@ class MySharedPreferences(context: Context) {
     companion object {
         const val PREFS_FILENAME = "prefs"
 
+        const val PREF_KEY_AUTO_LOGIN = "autoLogin"
+
         //Token
         const val PREF_KEY_ACCESS_TOKEN = "accessToken"
         const val PREF_KEY_REFRESH_TOKEN = "refreshToken"
@@ -41,6 +43,9 @@ class MySharedPreferences(context: Context) {
         prefs.edit().remove(PREF_KEY_GUARDIAN_DATA).apply()
     }
 
+    var autoLogin: Boolean
+        get() = prefs.getBoolean(PREF_KEY_AUTO_LOGIN, false)
+        set(value) = prefs.edit().putBoolean(PREF_KEY_AUTO_LOGIN, value).apply()
     var accessToken: String
         get() = prefs.getString(PREF_KEY_ACCESS_TOKEN, "").toString()
         set(value) = prefs.edit().putString(PREF_KEY_ACCESS_TOKEN, value).apply()

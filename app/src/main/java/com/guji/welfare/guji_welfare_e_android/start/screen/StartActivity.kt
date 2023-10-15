@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION
 import androidx.activity.viewModels
 import com.guji.welfare.guji_welfare_e_android.R
+import com.guji.welfare.guji_welfare_e_android.account.screen.AccountActivity
 import com.guji.welfare.guji_welfare_e_android.base.BaseActivity
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityStartBinding
 import com.guji.welfare.guji_welfare_e_android.main.screen.MainActivity
@@ -20,7 +21,7 @@ class StartActivity : BaseActivity<ActivityStartBinding, StartViewModel>(R.layou
     override fun start() {
         CoroutineScope(Main).launch{
             delay(1500)
-            Intent(this@StartActivity, MainActivity::class.java).also {
+            Intent(this@StartActivity, AccountActivity::class.java).also {
                 it.addFlags(FLAG_ACTIVITY_NO_ANIMATION)
                 startActivity(it)
             }

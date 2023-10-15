@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseListAdapter
 import com.guji.welfare.guji_welfare_e_android.databinding.ItemDiseaseDisorderInformationBinding
-import com.guji.welfare.guji_welfare_e_android.databinding.ItemGuardiaInformationBinding
 import com.guji.welfare.guji_welfare_e_android.main.adapter.data.DiseaseDisorderInformationData
 import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
 
