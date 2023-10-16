@@ -11,8 +11,7 @@ interface API {
     //account
     @POST("/v2/signup")
     fun signup(@Body signupRequestDto: SignupRequestDto): Call<StatusDto>
+
     @POST("/v2/login")
-    fun login(@Body loginRequestDto: LoginRequestDto): Call<Any>
-
-
+    fun login(@Body loginRequestDto: LoginRequestDto): Call<LoginResponseDto>
 }

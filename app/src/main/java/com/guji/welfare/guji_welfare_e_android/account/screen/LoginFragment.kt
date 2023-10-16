@@ -10,6 +10,7 @@ import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.account.viewmodel.AccountViewModel
 import com.guji.welfare.guji_welfare_e_android.base.BaseFragment
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.LoginRequestDto
+import com.guji.welfare.guji_welfare_e_android.data.dto.account.LoginResponseDto
 import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient
 import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient.cookieManager
 import com.guji.welfare.guji_welfare_e_android.databinding.FragmentLoginBinding
@@ -32,7 +33,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
             buttonLogin.setOnClickListener(OnSingleClickListener {
                 val password = textPassword.text.toString()
                 val phoneNumber = textPhoneNumber.text.toString()
-                login(password, phoneNumber)
+                val loginDto = LoginRequestDto(
+                    password = password,
+                    telephoneNum = phoneNumber
+                )
+                login(loginDto)
             })
         }
     }
@@ -45,18 +50,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
             .commit()
     }
 
-    private fun login(password: String, phoneNumber: String) {
-        val loginDto = LoginRequestDto(
-            password, phoneNumber
-        )
-        RetrofitClient.api.login(loginDto).enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+    private fun login(loginDto: LoginRequestDto) {
+        RetrofitClient.api.login(loginDto).enqueue(object : Callback<LoginResponseDto> {
+            override fun onResponse(
+                call: Call<LoginResponseDto>,
+                response: Response<LoginResponseDto>
+            ) {
                 if (response.isSuccessful) {
                     var accountToken = ""
                     var refreshToken = ""
                     val cookies = cookieManager.cookieStore.cookies
                     for (cookie in cookies) {
-                        if (cookie.name == "account-token") accountToken = cookie.value
+                        if (cookie.name == "access-token") accountToken = cookie.value
                         if (cookie.name == "refresh-token") refreshToken = cookie.value
                     }
                     Log.d("Cookie", "AccountToken : $accountToken, RefreshToken : $refreshToken")
@@ -71,7 +76,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                         startActivity(it)
                         requireActivity().finish()
                     }
-
                 } else if (response.code() == 403) {
                     Toast.makeText(context, "비밀번호나 아이디가 틀렸습니다", Toast.LENGTH_SHORT).show()
                     with(binding) {
@@ -87,7 +91,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<LoginResponseDto>, t: Throwable) {
                 Toast.makeText(context, "인터넷 연결해주세요", Toast.LENGTH_SHORT).show()
             }
 
