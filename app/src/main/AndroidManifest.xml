@@ -5,6 +5,7 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -35,11 +36,8 @@
             android:name=".main.screen.MainActivity"
             android:exported="false">
         </activity>
-<<<<<<< HEAD
-=======
         <activity android:name=".account.screen.AccountActivity"
             android:exported="false"/>
->>>>>>> 431e67e (:zap: commit)
     </application>
 
 </manifest>
