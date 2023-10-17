@@ -17,15 +17,16 @@ object RetrofitClient{
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
     }
 
-    private val client = OkHttpClient.Builder()
-        .cookieJar(JavaNetCookieJar(cookieManager))
+    private var builder = OkHttpClient().newBuilder()
+    private var okHttpClient = builder
+        .cookieJar(JavaNetCookieJar(CookieManager()))
         .build()
 
-    var gson = GsonBuilder().setLenient().create()
+    private var gson = GsonBuilder().setLenient().create()
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(URL)
-        .client(client)
+        .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
