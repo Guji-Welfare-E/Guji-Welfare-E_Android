@@ -8,7 +8,9 @@ import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface API {
     //account
@@ -20,4 +22,7 @@ interface API {
 
     @GET("/v2/user/get")
     suspend fun getUserData(): UserDataDto
+
+    @PATCH("/v2/user/manager/update")
+    suspend fun getManagerData(@Query("manager") manager: String): StatusDto
 }
