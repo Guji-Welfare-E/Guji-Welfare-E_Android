@@ -1,8 +1,6 @@
 package com.guji.welfare.guji_welfare_e_android.base
 
 import android.annotation.SuppressLint
-import android.util.Log
-import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
@@ -20,6 +18,10 @@ abstract class BaseListAdapter<T : Any, VDB : ViewDataBinding>(
         fun bind(item: T) {
             action(item, binding)
         }
+    }
+
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
 }
