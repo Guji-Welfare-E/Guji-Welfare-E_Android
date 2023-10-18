@@ -1,5 +1,6 @@
 package com.guji.welfare.guji_welfare_e_android.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,7 @@ class GuardianInformationListAdapter :
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        Log.d("상태","onBindViewHolder")
         with(holder) {
             itemView.setOnClickListener(OnSingleClickListener {
                 itemClickListener.onClick(it, position)

@@ -22,7 +22,7 @@ class DialogGuardianInformationAdd :
     private lateinit var name: String
     private lateinit var relationship: String
     private lateinit var phoneNumber: String
-    lateinit var requestLauncher: ActivityResultLauncher<Intent>
+    private lateinit var requestLauncher: ActivityResultLauncher<Intent>
 
 
     override fun getViewModelClass(): Class<DialogGuardianInformationAddViewModel> =
