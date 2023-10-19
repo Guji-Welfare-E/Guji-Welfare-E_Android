@@ -20,10 +20,6 @@ abstract class BaseListAdapter<T : Any, VDB : ViewDataBinding>(
         }
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
-
 }
 
 class BaseItemCallback<T : Any> : DiffUtil.ItemCallback<T>() {

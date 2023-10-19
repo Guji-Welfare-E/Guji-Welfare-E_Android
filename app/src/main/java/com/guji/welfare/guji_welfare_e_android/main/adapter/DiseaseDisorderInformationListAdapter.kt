@@ -18,7 +18,9 @@ class DiseaseDisorderInformationListAdapter: BaseListAdapter<DiseaseDisorder, It
     ) {
         with(binding){
             textDiseaseDisorder.text = data.name
-//            textDate.text = data.date.toString()
+            val date = data.createTime
+            val datePart = date.substring(0, 10)
+            textDate.text = datePart
         }
     }
 
@@ -34,11 +36,13 @@ class DiseaseDisorderInformationListAdapter: BaseListAdapter<DiseaseDisorder, It
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        Log.d("상태","onBindViewHolder")
         with(holder) {
             itemView.setOnClickListener(OnSingleClickListener {
                 itemClickListener.onClickDieaseInformation(it, position)
             })
         }
+        return holder.bind(getItem(position))
     }
 
     interface OnItemClickListener {
