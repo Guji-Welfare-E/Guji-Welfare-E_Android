@@ -24,6 +24,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
     R.layout.fragment_login
 ) {
     override val viewModel: AccountViewModel by viewModels()
+
     override fun start() {
         with(binding) {
             buttonSignup.setOnClickListener(OnSingleClickListener {
@@ -65,11 +66,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                         if (cookie.name == "refresh-token") refreshToken = cookie.value
                     }
                     Log.d("Cookie", "AccountToken : $accountToken, RefreshToken : $refreshToken")
-                    App.prefs.accessToken = accountToken
 
                     if (binding.buttonMaintainLogin.isChecked) {
                         App.prefs.autoLogin = true
                         App.prefs.refreshToken = refreshToken
+                        App.prefs.accessToken = accountToken
                     }
 
                     Intent(context, MainActivity::class.java).also {
