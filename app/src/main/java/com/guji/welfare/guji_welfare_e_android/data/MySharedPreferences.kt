@@ -2,6 +2,7 @@ package com.guji.welfare.guji_welfare_e_android.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.guji.welfare.guji_welfare_e_android.App
 
 class MySharedPreferences(context: Context) {
     companion object {
@@ -31,6 +32,7 @@ class MySharedPreferences(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
     fun remove(){
+        App.prefs.autoLogin = false
         prefs.edit().remove(PREF_KEY_ACCESS_TOKEN).apply()
         prefs.edit().remove(PREF_KEY_REFRESH_TOKEN).apply()
         prefs.edit().remove(PREF_KEY_MY_NAME).apply()

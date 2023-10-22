@@ -16,6 +16,7 @@ import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.account.screen.AccountActivity
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseaseDisorder
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
+import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityMainBinding
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogChangePersonalInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangePassword
@@ -181,6 +182,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             startActivity(it)
             finish()
         }
+        RetrofitClient.cookieManager.cookieStore.cookies.clear()
         Toast.makeText(this@MainActivity, "로그아웃됨", Toast.LENGTH_SHORT).show()
     }
 
@@ -191,7 +193,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun secession() {
-        //TODO("회원 탈퇴 로직")
+        //TODO(회원 탈퇴 로직)
+        App.prefs.remove()
+        Intent(this@MainActivity, AccountActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
+        RetrofitClient.cookieManager.cookieStore.cookies.clear()
     }
 
     private fun changeInformation() {
