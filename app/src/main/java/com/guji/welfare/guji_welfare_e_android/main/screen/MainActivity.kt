@@ -17,6 +17,7 @@ import com.guji.welfare.guji_welfare_e_android.account.screen.AccountActivity
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseaseDisorder
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
 import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient
+import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient.cookieManager
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityMainBinding
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogChangePersonalInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangePassword
@@ -109,8 +110,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             save.welfareworkerAffiliation = textWelfareWorkerAffiliation.text.toString()
             save.welfareWorkerName = textWelfareWorkerName.text.toString()
             save.welfareWorkerPhoneNumber = textWelfareWorkerPhoneNumber.text.toString()
-            App.prefs.myDwelling = textMyDwelling.text.toString()
-            App.prefs.myName = textMyName.text.toString()
+            save.myDwelling = textMyDwelling.text.toString()
+            save.myName = textMyName.text.toString()
         }
     }
 
@@ -122,7 +123,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     private fun setAdapter() {
         with(binding) {
-
             recyclerViewGuardian.layoutManager = LinearLayoutManager(MainActivity())
             recyclerViewGuardian.adapter = guardiaInformationAdapter
             recyclerViewGuardian.addItemDecoration(guardianInformationDecoration)
@@ -138,8 +138,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     private fun setClickListener() {
         with(binding) {
-            buttonClose.setOnClickListener { binding.drawer.closeDrawer(GravityCompat.END) }
-            buttonMenu.setOnClickListener { binding.drawer.openDrawer(GravityCompat.END) }
+            buttonClose.setOnClickListener { drawer.closeDrawer(GravityCompat.END) }
+            buttonMenu.setOnClickListener { drawer.openDrawer(GravityCompat.END) }
 
             //Add
             buttonGuardianAdd.setOnClickListener { setDialogGuardianInformationAdd() }
@@ -149,21 +149,20 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             //call
             buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.welfareWorkerPhoneNumber.toString()) }
 
-
             //switch
             switchAutoBackground.setOnClickListener {
                 //TODO("시간 마다 배경화면 변경 아 하기 싫다")
             }
             switchGuardianInformation.setOnClickListener {
                 viewModel.switchGuardianInformationStatus.value =
-                    binding.switchGuardianInformation.isChecked
+                    switchGuardianInformation.isChecked
             }
             switchMyInformation.setOnClickListener {
-                viewModel.switchMyInformationStatus.value = binding.switchMyInformation.isChecked
+                viewModel.switchMyInformationStatus.value = switchMyInformation.isChecked
             }
             switchWelfareworkerInformation.setOnClickListener {
                 viewModel.switchWelfareworkerInformationStatus.value =
-                    binding.switchWelfareworkerInformation.isChecked
+                    switchWelfareworkerInformation.isChecked
             }
 
             //drawer button
@@ -199,7 +198,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             startActivity(it)
             finish()
         }
-        RetrofitClient.cookieManager.cookieStore.cookies.clear()
+        cookieManager.cookieStore.cookies.clear()
     }
 
     private fun changeInformation() {
@@ -223,9 +222,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogGuardianInformation(position: Int) {
-        val name = guardianListData[position].name
-        val relationship = guardianListData[position].relationship
-        val phoneNumber = guardianListData[position].phoneNumber
+        val data = guardianListData[position]
+        val name = data.name
+        val relationship = data.relationship
+        val phoneNumber = data.phoneNumber
         val dialogGuardianInformation = DialogGuardianInformation(name, relationship, phoneNumber)
         with(dialogGuardianInformation) {
             isCancelable = false

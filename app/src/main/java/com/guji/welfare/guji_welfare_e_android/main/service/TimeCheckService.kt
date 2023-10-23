@@ -52,7 +52,6 @@ class TimeCheckService : Service() {
         var time = 0
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
-                Log.d("상태","time: $time")
                 if (!isScreenOn()) time++
                 else if (time >= 43200) {sendMessage(); time=0}
                 else time = 0

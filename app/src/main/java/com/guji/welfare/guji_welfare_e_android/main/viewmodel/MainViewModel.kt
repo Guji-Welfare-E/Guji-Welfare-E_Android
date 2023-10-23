@@ -32,7 +32,6 @@ class MainViewModel : BaseViewModel() {
     val welfareworkerAffiliation: LiveData<String>
         get() = _welfareworkerAffiliation
 
-
     private val _guardianInformationList = ListLiveData<GuardianInformationData>()
     val guardianInformationList: ListLiveData<GuardianInformationData>
         get() = _guardianInformationList

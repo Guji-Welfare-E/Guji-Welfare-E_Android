@@ -85,7 +85,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
                                 android:fontFamily="@font/pretendard_bold"
-                                android:text="신기하게 뛰어가는 강아지"
                                 android:textColor="@color/black"
                                 android:textSize="18dp"
                                 app:layout_constraintBottom_toBottomOf="@+id/text_my_name"
@@ -319,7 +318,7 @@
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycler_view_disease_disorder"
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
+                                android:layout_height="wrap_content"
                                 android:overScrollMode="never" />
 
                             <androidx.appcompat.widget.AppCompatTextView
@@ -328,6 +327,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="10dp"
+                                android:visibility="visible"
                                 android:fontFamily="@font/pretendard_bold"
                                 android:text="등록된 장애 정보가 없습니다!"
                                 android:textColor="@color/black"
