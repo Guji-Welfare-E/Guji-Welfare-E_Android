@@ -4,6 +4,7 @@ import com.guji.welfare.guji_welfare_e_android.data.dto.StatusDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.LoginRequestDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.LoginResponseDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.SignupRequestDto
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.GuardianDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
 import retrofit2.Call
 import retrofit2.http.Body
@@ -25,4 +26,7 @@ interface API {
 
     @PATCH("/v2/user/manager/update")
     suspend fun getManagerData(@Query("manager") manager: String): StatusDto
+
+    @PATCH("v2/user/update/guardians")
+    suspend fun updateGuardiansData(@Body guardianDto: List<GuardianDto>): StatusDto
 }
