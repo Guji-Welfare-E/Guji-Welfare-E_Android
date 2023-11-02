@@ -64,6 +64,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding, AccountViewModel>(
                 if (response.isSuccessful) {
                     transactionFragment(loginFragment)
                 } else {
+                    Log.e("애러",response.code().toString())
                     Toast.makeText(context, "회원가입 실패", Toast.LENGTH_SHORT).show()
                 }
             }

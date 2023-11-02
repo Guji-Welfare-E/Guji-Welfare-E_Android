@@ -210,6 +210,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             //my
             textMyName.text = userDataDto.data.name
             textMyDwelling.text = userDataDto.data.residence
+            textMyNickname.text = userDataDto.data.nickName
 
             //disease
             if (userDataDto.data.disease.isNullOrEmpty()) emptyDiseaseDisorder.visibility =

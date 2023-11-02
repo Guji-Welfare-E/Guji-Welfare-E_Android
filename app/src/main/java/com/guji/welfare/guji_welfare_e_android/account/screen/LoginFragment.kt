@@ -94,6 +94,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
 
             override fun onFailure(call: Call<LoginResponseDto>, t: Throwable) {
                 Toast.makeText(context, "인터넷 연결해주세요", Toast.LENGTH_SHORT).show()
+                Log.e("애러",t.message.toString())
             }
 
         })
