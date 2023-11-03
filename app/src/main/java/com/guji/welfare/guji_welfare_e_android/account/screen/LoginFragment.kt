@@ -1,8 +1,11 @@
 package com.guji.welfare.guji_welfare_e_android.account.screen
 
 import android.content.Intent
+import android.graphics.Typeface
+import android.text.InputType
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.guji.welfare.guji_welfare_e_android.App
@@ -25,7 +28,19 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
 ) {
     override val viewModel: AccountViewModel by viewModels()
 
+    private var accountToken = ""
+    private var refreshToken = ""
+
+    private val pretendardBold: Typeface? by lazy {
+        ResourcesCompat.getFont(requireContext(), R.font.pretendard_bold)
+    }
+
+
     override fun start() {
+        onClickEvent()
+    }
+
+    private fun onClickEvent(){
         with(binding) {
             buttonSignup.setOnClickListener(OnSingleClickListener {
                 val signupFragment = SignupFragment()
@@ -40,6 +55,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                 )
                 login(loginDto)
             })
+            buttonShowPassword.setOnClickListener {
+                if (buttonShowPassword.isChecked) {
+                    Log.d("비밀번호", "보임")
+                    textPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    textPassword.typeface = pretendardBold
+                } else {
+                    Log.d("비밀번호", "안보임")
+                    textPassword.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    textPassword.typeface = pretendardBold
+                }
+            }
         }
     }
 
@@ -58,18 +85,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                 response: Response<LoginResponseDto>
             ) {
                 if (response.isSuccessful) {
-                    var accountToken = ""
-                    var refreshToken = ""
-                    val cookies = cookieManager.cookieStore.cookies
-                    for (cookie in cookies) {
-                        if (cookie.name == "access-token") accountToken = cookie.value
-                        if (cookie.name == "refresh-token") refreshToken = cookie.value
-                    }
+                    accountToken = cookieManager.getTokenCookieValue("access-token") ?: ""
+                    refreshToken = cookieManager.getTokenCookieValue("refresh-token") ?: ""
                     Log.d("Cookie", "AccountToken : $accountToken, RefreshToken : $refreshToken")
 
                     if (binding.buttonMaintainLogin.isChecked) {
                         App.prefs.autoLogin = true
                         App.prefs.refreshToken = refreshToken
+                        App.prefs.accessToken = accountToken
+                    } else {
+                        App.prefs.autoLogin = false
                         App.prefs.accessToken = accountToken
                     }
 
@@ -94,7 +119,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
 
             override fun onFailure(call: Call<LoginResponseDto>, t: Throwable) {
                 Toast.makeText(context, "인터넷 연결해주세요", Toast.LENGTH_SHORT).show()
-                Log.e("애러",t.message.toString())
+                Log.e("애러", t.message.toString())
             }
 
         })
