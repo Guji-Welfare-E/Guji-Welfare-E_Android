@@ -14,19 +14,31 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface API {
-    //account
+    //회원가입
     @POST("/v2/signup")
     fun signup(@Body signupRequestDto: SignupRequestDto): Call<StatusDto>
 
+    //로그인
     @POST("/v2/login")
     fun login(@Body loginRequestDto: LoginRequestDto): Call<LoginResponseDto>
 
+    //전화번호 인증
+    @POST("v2/sms/auth/request")
+    fun telephoneCertification(@Query("telephone") telephone: String)
+
+    //본인 정보 가져오기
     @GET("/v2/user/get")
     suspend fun getUserData(): UserDataDto
 
-    @PATCH("/v2/user/manager/update")
-    suspend fun getManagerData(@Query("manager") manager: String): StatusDto
+    //사용자의 복지사 변경
+    @PATCH("/v2/user/update/manager")
+    suspend fun updateManagerData(@Query("manager") manager: String): StatusDto
 
+    //사용자의 보호자 일괄 변경
     @PATCH("v2/user/update/guardians")
     suspend fun updateGuardiansData(@Body guardianDto: List<GuardianDto>): StatusDto
+
+    //사용자 별칭 랜덤 변경
+    @PATCH("v2/user/update/nickname")
+    suspend fun updateNickName()
 }
