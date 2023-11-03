@@ -116,7 +116,7 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/frame_welfare_worker_information"
+                            android:id="@+id/layout_welfare_worker_information"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
