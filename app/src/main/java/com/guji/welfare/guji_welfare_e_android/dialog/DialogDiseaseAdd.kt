@@ -1,22 +1,69 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.widget.addTextChangedListener
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
+import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
+import com.guji.welfare.guji_welfare_e_android.data.room.disease.entity.Disease
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogDiseaseAddBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogDiseaseViewModel
+import com.guji.welfare.guji_welfare_e_android.main.viewmodel.DiseaseViewModel
+import com.guji.welfare.guji_welfare_e_android.util.NetworkManager
+import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
-class DialogDiseaseAdd: BaseDialogFragment<DialogDiseaseAddBinding, DialogDiseaseViewModel>(R.layout.dialog_disease_add) {
+class DialogDiseaseAdd(roomDB: AppDatabase?) :
+    BaseDialogFragment<DialogDiseaseAddBinding, DiseaseViewModel>(R.layout.dialog_disease_add) {
 
-    override fun getViewModelClass(): Class<DialogDiseaseViewModel> = DialogDiseaseViewModel::class.java
+    private val roomDB = roomDB
 
+    override fun getViewModelClass(): Class<DiseaseViewModel> =
+        DiseaseViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        buttonClickEvent()
+        buttonEnabled()
+    }
+
+    private fun buttonClickEvent() {
         with(binding) {
-            buttonNo.setOnClickListener { dismiss() }
-            buttonYes.setOnClickListener { TODO("적힌 질병을 내부 DB에 추가 및 UI에 추가, 서버에 전송, 만약 질병이 적혀있지 않다면 버튼 비활성화") }
+            buttonNo.setOnClickListener(OnSingleClickListener { dismiss() })
+            buttonYes.setOnClickListener(OnSingleClickListener {
+                if (NetworkManager.checkNetworkState(requireContext())) {
+//                    viewModel.api
+                }
+                roomDB(editTextDisease.text.toString())
+                viewModel.updateDiseaseData(roomDB!!.diseaseDao().getAll())
+                dismiss()
+            })
+        }
+    }
+
+    private fun roomDB(disease: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val format = "yyyy-MM-dd"
+            val simpleDateFormat = SimpleDateFormat(format)
+            val time = Date(System.currentTimeMillis())
+            val date: String = simpleDateFormat.format(time)
+            roomDB!!.diseaseDao()
+                .insertItem(Disease(index = 0, name = disease, date = date))
+        }
+    }
+
+    private fun buttonEnabled() {
+        with(binding) {
+            buttonYes.isEnabled = false
+            editTextDisease.addTextChangedListener {
+                buttonYes.isEnabled = !it.isNullOrEmpty()
+                Log.d("추가", it.isNullOrEmpty().toString() + " ${it.toString()}")
+            }
         }
     }
 }
