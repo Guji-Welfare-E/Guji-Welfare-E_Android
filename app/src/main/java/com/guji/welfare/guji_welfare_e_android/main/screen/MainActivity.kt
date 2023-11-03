@@ -1,13 +1,13 @@
 package com.guji.welfare.guji_welfare_e_android.main.screen
 
 import android.content.Intent
-import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.guji.welfare.guji_welfare_e_android.R
@@ -16,8 +16,8 @@ import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.account.screen.AccountActivity
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseaseDisorder
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
-import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient
 import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient.cookieManager
+import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityMainBinding
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogChangePersonalInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangePassword
@@ -34,6 +34,8 @@ import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInforma
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.DiseaseDisorderInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.GuardianInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.service.TimeCheckService
+import com.guji.welfare.guji_welfare_e_android.main.viewmodel.DiseaseViewModel
+import com.guji.welfare.guji_welfare_e_android.main.viewmodel.GuardianViewModel
 import com.guji.welfare.guji_welfare_e_android.main.viewmodel.MainViewModel
 
 
@@ -43,6 +45,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     override val viewModel: MainViewModel by viewModels()
 
+    private lateinit var diseaseViewModel: DiseaseViewModel
+    private lateinit var guardianViewModel: GuardianViewModel
 
     private var guardianListData: List<GuardianInformationData> = listOf()
     private var diseaseDisorderInformationData: List<DiseaseDisorder> = listOf()
@@ -58,47 +62,76 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         android.Manifest.permission.READ_CONTACTS
     )
 
-    override fun start() {
-        installSplashScreen()
+    private var roomDB: AppDatabase? = null
 
-        ActivityCompat.requestPermissions(this, permission, 0)
+    override fun start() {
+        diseaseViewModel = ViewModelProvider(this)[DiseaseViewModel::class.java]
+        guardianViewModel = ViewModelProvider(this)[GuardianViewModel::class.java]
+        roomDB = AppDatabase.getInstance(this)
+
+        installSplashScreen()
 
         val behavior = BottomSheetBehavior.from(binding.bottomSheet)
         behavior.peekHeight = 1400
+
+        ActivityCompat.requestPermissions(this, permission, 0)
 
         setAdapter()
         setClickListener()
         switch()
         serviceStart()
 
-        viewModel.getUserData()
-
-        viewModel.guardianInformationList.observe(this@MainActivity) {
-            checkEmpty(it)
-            guardiaInformationAdapter.submitList(guardianListData)
+        with(viewModel){
+            getUserData()
+            userData.observe(this@MainActivity) {
+                updateMyInformationUI(it)
+            }
         }
 
-        viewModel.userData.observe(this@MainActivity) {
-            diseaseDisorderInformationData = it.data.disease
-            updateUI(it)
+        with(diseaseViewModel){
+            disease.observe(this@MainActivity){
+                diseaseDisorderInformationData = it.map { diseaseData ->
+                    DiseaseDisorder(diseaseData.name, diseaseData.date)
+                }
+                updateDiseaseUI(diseaseDisorderInformationData)
+            }
         }
+
+        with(guardianViewModel){
+            guardian.observe(this@MainActivity){
+                guardianListData = it
+                updateGuardianUI(guardianListData)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppDatabase.destroyInstance()
     }
 
     private fun switch() {
         with(viewModel) {
-            switchMyInformationStatus.observe(this@MainActivity) {
-                if (!it) binding.layoutMyInformation.visibility = View.GONE
-                else binding.layoutMyInformation.visibility = View.VISIBLE
-            }
+            with(binding) {
+                switchMyInformationStatus.observe(this@MainActivity) {
+                    if (!it) layoutMyInformation.visibility = View.GONE
+                    else layoutMyInformation.visibility = View.VISIBLE
+                }
 
-            switchGuardianInformationStatus.observe(this@MainActivity) {
-                if (!it) binding.layoutGuardianInformation.visibility = View.GONE
-                else binding.layoutGuardianInformation.visibility = View.VISIBLE
-            }
+                switchGuardianInformationStatus.observe(this@MainActivity) {
+                    if (!it) layoutGuardianInformation.visibility = View.GONE
+                    else layoutGuardianInformation.visibility = View.VISIBLE
+                }
 
-            switchWelfareworkerInformationStatus.observe(this@MainActivity) {
-                if (!it) binding.frameWelfareWorkerInformation.visibility = View.GONE
-                else binding.frameWelfareWorkerInformation.visibility = View.VISIBLE
+                switchWelfareworkerInformationStatus.observe(this@MainActivity) {
+                    if (!it) layoutWelfareWorkerInformation.visibility = View.GONE
+                    else layoutWelfareWorkerInformation.visibility = View.VISIBLE
+                }
+
+                switchDiseaseDisorderInformationStatus.observe(this@MainActivity) {
+                    if (!it) layoutDiseaseDisorder.visibility = View.GONE
+                    else layoutDiseaseDisorder.visibility = View.VISIBLE
+                }
             }
         }
     }
@@ -115,22 +148,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        autoSave()
-    }
-
-
     private fun setAdapter() {
         with(binding) {
+            //Guardian
             recyclerViewGuardian.layoutManager = LinearLayoutManager(MainActivity())
             recyclerViewGuardian.adapter = guardiaInformationAdapter
             recyclerViewGuardian.addItemDecoration(guardianInformationDecoration)
 
+            //Disorder
             recyclerViewDiseaseDisorder.layoutManager = LinearLayoutManager(MainActivity())
             recyclerViewDiseaseDisorder.adapter = diseaseDisorderInformationListAdapter
             recyclerViewDiseaseDisorder.addItemDecoration(diseaseDisorderInformationDecoration)
 
+            //ClickListener
             guardiaInformationAdapter.setItemClickListener(this@MainActivity)
             diseaseDisorderInformationListAdapter.setItemClickListener(this@MainActivity)
         }
@@ -147,22 +177,29 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             buttonDiseaseDisorderAdd.setOnClickListener { setDialogDiseaseAdd() }
 
             //call
-            buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.welfareWorkerPhoneNumber.toString()) }
+            buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.welfareWorkerPhoneNumber) }
 
             //switch
             switchAutoBackground.setOnClickListener {
                 //TODO("시간 마다 배경화면 변경 아 하기 싫다")
             }
-            switchGuardianInformation.setOnClickListener {
-                viewModel.switchGuardianInformationStatus.value =
-                    switchGuardianInformation.isChecked
-            }
-            switchMyInformation.setOnClickListener {
-                viewModel.switchMyInformationStatus.value = switchMyInformation.isChecked
-            }
-            switchWelfareworkerInformation.setOnClickListener {
-                viewModel.switchWelfareworkerInformationStatus.value =
-                    switchWelfareworkerInformation.isChecked
+            with(viewModel){
+                switchGuardianInformation.setOnClickListener {
+                    switchGuardianInformationStatus.value =
+                        switchGuardianInformation.isChecked
+                }
+                switchMyInformation.setOnClickListener {
+                    switchMyInformationStatus.value =
+                        switchMyInformation.isChecked
+                }
+                switchWelfareworkerInformation.setOnClickListener {
+                    switchWelfareworkerInformationStatus.value =
+                        switchWelfareworkerInformation.isChecked
+                }
+                switchDiseaseDisorderInformation.setOnClickListener {
+                    switchDiseaseDisorderInformationStatus.value =
+                        switchDiseaseDisorderInformation.isChecked
+                }
             }
 
             //drawer button
@@ -175,49 +212,68 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private fun logout() {
-        App.prefs.remove()
-        Intent(this@MainActivity, AccountActivity::class.java).also {
-            startActivity(it)
-            finish()
-        }
-        RetrofitClient.cookieManager.cookieStore.cookies.clear()
-        Toast.makeText(this@MainActivity, "로그아웃됨", Toast.LENGTH_SHORT).show()
-    }
-
     private fun serviceStart() {
         Intent(this, TimeCheckService::class.java).also {
             startService(it)
         }
     }
 
-    private fun secession() {
-        //TODO(회원 탈퇴 로직)
+    private fun logout() {
         App.prefs.remove()
+        cookieManager.clear()
+        roomDB!!.guardiansDao().deleteAll()
+        roomDB!!.diseaseDao().deleteAll()
         Intent(this@MainActivity, AccountActivity::class.java).also {
             startActivity(it)
             finish()
         }
-        cookieManager.cookieStore.cookies.clear()
+        Toast.makeText(this@MainActivity, "로그아웃됨", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun secession() {
+        App.prefs.remove()
+        cookieManager.clear()
+        roomDB!!.guardiansDao().deleteAll()
+        roomDB!!.diseaseDao().deleteAll()
+        Intent(this@MainActivity, AccountActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
     }
 
     private fun changeInformation() {
         setDialogChangePersonalInformation()
     }
 
-    private fun updateUI(userDataDto: UserDataDto) {
+    private fun updateMyInformationUI(userDataDto: UserDataDto) {
         with(binding) {
-            //my
             textMyName.text = userDataDto.data.name
             textMyDwelling.text = userDataDto.data.residence
             textMyNickname.text = userDataDto.data.nickName
+        }
+    }
 
-            //disease
-            if (userDataDto.data.disease.isNullOrEmpty()) emptyDiseaseDisorder.visibility =
+    private fun updateDiseaseUI(diseaseDisorderData: List<DiseaseDisorder>){
+        with(binding){
+            if (diseaseDisorderData.isNullOrEmpty()) emptyDiseaseDisorder.visibility =
                 View.VISIBLE
             else {
                 emptyDiseaseDisorder.visibility = View.GONE
-                diseaseDisorderInformationListAdapter.submitList(userDataDto.data.disease)
+                diseaseDisorderInformationListAdapter.submitList(diseaseDisorderData)
+            }
+        }
+    }
+
+    private fun updateGuardianUI(guardianDisorderData: List<GuardianInformationData>){
+        with(binding){
+            if (guardianDisorderData.isNullOrEmpty()) {
+                recyclerViewGuardian.visibility = View.VISIBLE
+                emptyGuardian.visibility = View.GONE
+            }
+            else {
+                recyclerViewGuardian.visibility = View.GONE
+                emptyGuardian.visibility = View.VISIBLE
+                guardiaInformationAdapter.submitList(guardianListData)
             }
         }
     }
@@ -235,7 +291,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogGuardianInformationAdd() {
-        val dialogGuardianInformationAdd = DialogGuardianInformationAdd()
+        val dialogGuardianInformationAdd = DialogGuardianInformationAdd(roomDB)
         with(dialogGuardianInformationAdd) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "guardianInformationAdd")
@@ -303,35 +359,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogDiseaseAdd() {
-        val dialogDiseaseAdd = DialogDiseaseAdd()
+        val dialogDiseaseAdd = DialogDiseaseAdd(roomDB)
         with(dialogDiseaseAdd) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "diseaseAdd")
         }
     }
 
-    fun call(phoneNumber: String) {
-        startActivity(Intent("android.intent.action.CALL", Uri.parse("tel:$phoneNumber")))
-    }
 
-    private fun checkEmpty(data: MutableList<GuardianInformationData>) {
-        if (data.size == 0) {
-            binding.recyclerViewGuardian.visibility = View.GONE
-            binding.emptyGuardian.visibility = View.VISIBLE
-        } else {
-            binding.recyclerViewGuardian.visibility = View.VISIBLE
-            binding.emptyGuardian.visibility = View.GONE
-        }
-    }
-
-    fun changePassword(password: String) {
-
-    }
-
+    //Adapter Click Event fun
     override fun onClickDieaseInformation(v: View, position: Int) {
 
     }
-
 
     override fun onClick(v: View, position: Int) {
         setDialogGuardianInformation(position)
