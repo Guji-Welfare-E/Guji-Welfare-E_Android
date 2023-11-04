@@ -5,16 +5,16 @@ import android.view.View
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogCheckChangeNicknameBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogCheckChangeNickNameViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.UserDataViewModel
 
 class DialogSelectNickName(nickname: String) :
-    BaseDialogFragment<DialogCheckChangeNicknameBinding, DialogCheckChangeNickNameViewModel>(
+    BaseDialogFragment<DialogCheckChangeNicknameBinding, UserDataViewModel>(
         R.layout.dialog_check_change_nickname
     ) {
 
     private val nickname: String
-    override fun getViewModelClass(): Class<DialogCheckChangeNickNameViewModel> =
-        DialogCheckChangeNickNameViewModel::class.java
+    override fun getViewModelClass(): Class<UserDataViewModel> =
+        UserDataViewModel::class.java
 
     init {
         this.nickname = nickname

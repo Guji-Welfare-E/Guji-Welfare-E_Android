@@ -6,12 +6,12 @@ import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogChangeNicknameBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogChangeNickNameViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.UserDataViewModel
 
 class DialogChangeNickName :
-    BaseDialogFragment<DialogChangeNicknameBinding, DialogChangeNickNameViewModel>(R.layout.dialog_change_nickname) {
-    override fun getViewModelClass(): Class<DialogChangeNickNameViewModel> =
-        DialogChangeNickNameViewModel::class.java
+    BaseDialogFragment<DialogChangeNicknameBinding, UserDataViewModel>(R.layout.dialog_change_nickname) {
+    override fun getViewModelClass(): Class<UserDataViewModel> =
+        UserDataViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
