@@ -6,12 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.base.BaseViewModel
-import com.guji.welfare.guji_welfare_e_android.data.network.API
+import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient.api
 import kotlinx.coroutines.launch
 
-class DialogWelfareworkerRegistrationViewModel(
-    private val api: API
-): BaseViewModel() {
+class WelfareworkerViewModel: BaseViewModel() {
     private val _welfareworkerPhoneNumber = MutableLiveData<String>()
     val welfareworkerPhoneNumber: LiveData<String>
         get() = _welfareworkerPhoneNumber

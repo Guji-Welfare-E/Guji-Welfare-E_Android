@@ -6,7 +6,7 @@
 
         <variable
             name="disease"
-            type="com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogDiseaseViewModel" />
+            type="com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DiseaseViewModel" />
     </data>
 
     <LinearLayout
