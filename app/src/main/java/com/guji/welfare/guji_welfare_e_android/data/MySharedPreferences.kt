@@ -21,28 +21,28 @@ class MySharedPreferences(context: Context) {
         const val PREF_KEY_MY_BIRTHDAY = "Birthday"
 
         //WelfareWorker
-        const val PREF_KEY_WELFAREWORKER_PHONE_NUMBER = "welfareWorkerPhoneNumber"
         const val PREF_KEY_WELFAREWORKER_NAME = "welfareWorkerName"
-        const val PREF_KEY_WELFAREWORKER_AFFILIATION = "welfareWorkerAffiliation"
-
-        //guardian
-        const val PREF_KEY_GUARDIAN_DATA = "guardianData"
+        const val PREF_KEY_WELFAREWORKER_PHONENUMBER = "welfareWorkerPhoneNumber"
+        const val PREF_KEY_WELFAREWORKER_BELONG = "welfareWorkerBelong"
     }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
     fun remove(){
         App.prefs.autoLogin = false
+        //Token
         prefs.edit().remove(PREF_KEY_ACCESS_TOKEN).apply()
         prefs.edit().remove(PREF_KEY_REFRESH_TOKEN).apply()
+        //My Information
         prefs.edit().remove(PREF_KEY_MY_NAME).apply()
         prefs.edit().remove(PREF_KEY_MY_NICKNAME).apply()
         prefs.edit().remove(PREF_KEY_MY_DWELLING).apply()
         prefs.edit().remove(PREF_KEY_MY_BIRTHDAY).apply()
-        prefs.edit().remove(PREF_KEY_WELFAREWORKER_PHONE_NUMBER).apply()
+        //WelfareWorker
         prefs.edit().remove(PREF_KEY_WELFAREWORKER_NAME).apply()
-        prefs.edit().remove(PREF_KEY_WELFAREWORKER_AFFILIATION).apply()
-        prefs.edit().remove(PREF_KEY_GUARDIAN_DATA).apply()
+        prefs.edit().remove(PREF_KEY_WELFAREWORKER_PHONENUMBER).apply()
+        prefs.edit().remove(PREF_KEY_WELFAREWORKER_BELONG).apply()
+
     }
 
     var autoLogin: Boolean
@@ -70,20 +70,16 @@ class MySharedPreferences(context: Context) {
         get() = prefs.getString(PREF_KEY_MY_BIRTHDAY, "").toString()
         set(value) = prefs.edit().putString(PREF_KEY_MY_BIRTHDAY, value).apply()
 
-    //메니저
-    var welfareWorkerPhoneNumber: String
-        get() = prefs.getString(PREF_KEY_WELFAREWORKER_PHONE_NUMBER, "").toString()
-        set(value) = prefs.edit().putString(PREF_KEY_WELFAREWORKER_PHONE_NUMBER, value).apply()
+    //담당자 정보
     var welfareWorkerName: String
-        get() = prefs.getString(PREF_KEY_WELFAREWORKER_NAME, "").toString()
+        get() = prefs.getString(PREF_KEY_WELFAREWORKER_NAME,"").toString()
         set(value) = prefs.edit().putString(PREF_KEY_WELFAREWORKER_NAME, value).apply()
-    var welfareworkerAffiliation: String
-        get() = prefs.getString(PREF_KEY_WELFAREWORKER_AFFILIATION, "").toString()
-        set(value) = prefs.edit().putString(PREF_KEY_WELFAREWORKER_AFFILIATION, value).apply()
 
-    //보호자
-    var guardianData: String
-        get() = prefs.getString(PREF_KEY_GUARDIAN_DATA, "").toString()
-        set(value) = prefs.edit().putString(PREF_KEY_GUARDIAN_DATA,value).apply()
+    var welfareWorkerPhoneNumber: String
+        get() = prefs.getString(PREF_KEY_WELFAREWORKER_PHONENUMBER,"").toString()
+        set(value) = prefs.edit().putString(PREF_KEY_WELFAREWORKER_PHONENUMBER, value).apply()
 
+    var welfareWorkerBelong: String
+        get() = prefs.getString(PREF_KEY_WELFAREWORKER_BELONG,"").toString()
+        set(value) = prefs.edit().putString(PREF_KEY_WELFAREWORKER_BELONG, value).apply()
 }
