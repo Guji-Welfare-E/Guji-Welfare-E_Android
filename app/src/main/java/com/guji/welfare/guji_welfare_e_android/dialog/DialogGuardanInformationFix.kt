@@ -2,18 +2,18 @@ package com.guji.welfare.guji_welfare_e_android.dialog
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.os.Bundle
 import android.text.Editable
 import android.view.View
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogGuardianInformationFixBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogGuardianInformationFixViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.GuardianViewModel
 
 class DialogGuardanInformationFix(
     name: String, relationship: String, phoneNumber: String
-) : BaseDialogFragment<DialogGuardianInformationFixBinding, DialogGuardianInformationFixViewModel>(R.layout.dialog_guardian_information_fix) {
+) : BaseDialogFragment<DialogGuardianInformationFixBinding, GuardianViewModel>(R.layout.dialog_guardian_information_fix) {
     private val name: String
     private val relationship: String
     private val phoneNumber: String
@@ -24,10 +24,9 @@ class DialogGuardanInformationFix(
         this.phoneNumber = phoneNumber
     }
 
-    override fun getViewModelClass(): Class<DialogGuardianInformationFixViewModel> = DialogGuardianInformationFixViewModel::class.java
+    override val viewModel: GuardianViewModel by activityViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun start() {
         with(binding) {
             textGuardianName.setText(this@DialogGuardanInformationFix.name)
             textGuardianRelationship.setText(this@DialogGuardanInformationFix.relationship)

@@ -1,15 +1,14 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
-import android.os.Bundle
-import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogGuardianInformationBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogGuardianInformationViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.GuardianViewModel
 
 class DialogGuardianInformation(
     name: String, relationship: String, phoneNumber: String
-) : BaseDialogFragment<DialogGuardianInformationBinding, DialogGuardianInformationViewModel>(R.layout.dialog_guardian_information) {
+) : BaseDialogFragment<DialogGuardianInformationBinding, GuardianViewModel>(R.layout.dialog_guardian_information) {
     private val name: String
     private val relationship: String
     private val phoneNumber: String
@@ -20,11 +19,9 @@ class DialogGuardianInformation(
         this.phoneNumber = phoneNumber
     }
 
-    override fun getViewModelClass(): Class<DialogGuardianInformationViewModel> =
-        DialogGuardianInformationViewModel::class.java
+    override val viewModel: GuardianViewModel by activityViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun start() {
         with(binding) {
             textName.text = this@DialogGuardianInformation.name
             textRelationship.text = this@DialogGuardianInformation.relationship

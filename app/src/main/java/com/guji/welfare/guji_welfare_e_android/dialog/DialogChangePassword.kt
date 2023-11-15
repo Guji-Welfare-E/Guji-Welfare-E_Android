@@ -1,7 +1,7 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
-import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogChangePasswordBinding
@@ -11,11 +11,9 @@ import java.util.regex.Pattern
 class DialogChangePassword: BaseDialogFragment<DialogChangePasswordBinding, UserDataViewModel>(
     R.layout.dialog_change_password) {
 
-    override fun getViewModelClass(): Class<UserDataViewModel> = UserDataViewModel::class.java
+    override val viewModel: UserDataViewModel by activityViewModels()
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun start() {
         with(binding){
             buttonNo.setOnClickListener { dismiss() }
             buttonOk.setOnClickListener {
@@ -25,6 +23,7 @@ class DialogChangePassword: BaseDialogFragment<DialogChangePasswordBinding, User
             }
         }
     }
+
 
     private fun isPasswordValid(password: String, checkPassword: String, binding: DialogChangePasswordBinding): Boolean {
         val pattern = Pattern.compile("^[a-zA-Z]{5,15}$")

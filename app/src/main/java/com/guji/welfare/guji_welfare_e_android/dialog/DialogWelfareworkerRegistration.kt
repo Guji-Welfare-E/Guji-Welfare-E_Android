@@ -1,20 +1,19 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
-import android.os.Bundle
-import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogWelfareworkerRegistrationBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogWelfareworkerRegistrationViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.WelfareworkerViewModel
 
 class DialogWelfareworkerRegistration :
-    BaseDialogFragment<DialogWelfareworkerRegistrationBinding, DialogWelfareworkerRegistrationViewModel>(
+    BaseDialogFragment<DialogWelfareworkerRegistrationBinding, WelfareworkerViewModel>(
         R.layout.dialog_welfareworker_registration
     ) {
-    override fun getViewModelClass(): Class<DialogWelfareworkerRegistrationViewModel> = DialogWelfareworkerRegistrationViewModel::class.java
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    override val viewModel: WelfareworkerViewModel by activityViewModels()
+    override fun start() {
         with(binding) {
             buttonYes.setOnClickListener {
                 viewModel.setWelfareworkerPhoneNumber(textWelfareworkerPhoneNumber.text.toString())

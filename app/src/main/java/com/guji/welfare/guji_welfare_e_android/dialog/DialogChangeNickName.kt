@@ -1,7 +1,7 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
-import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
@@ -10,11 +10,8 @@ import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.UserDataViewMode
 
 class DialogChangeNickName :
     BaseDialogFragment<DialogChangeNicknameBinding, UserDataViewModel>(R.layout.dialog_change_nickname) {
-    override fun getViewModelClass(): Class<UserDataViewModel> =
-        UserDataViewModel::class.java
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override val viewModel: UserDataViewModel by activityViewModels()
+    override fun start() {
         with(binding) {
             textErrorEmpty.visibility = View.INVISIBLE
             buttonNo.setOnClickListener { dismiss() }
