@@ -1,37 +1,44 @@
 package com.guji.welfare.guji_welfare_e_android.dialog.viewmodel
 
-import android.util.Log
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.guji.welfare.guji_welfare_e_android.base.BaseViewModel
+import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
 import com.guji.welfare.guji_welfare_e_android.data.room.disease.entity.Disease
+import com.guji.welfare.guji_welfare_e_android.repository.DiseaseRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class DiseaseViewModel : BaseViewModel() {
-    private val temp = mutableListOf<Disease>()
+class DiseaseViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val diseaseRepository: DiseaseRepository
+
+    init {
+        val diseaseDao = AppDatabase.getInstance(application)!!.diseaseDao()
+        diseaseRepository = DiseaseRepository(diseaseDao)
+    }
 
     private val _disease = MutableLiveData<List<Disease>>()
     val disease: LiveData<List<Disease>> = _disease
 
-    init {
-        _disease.value = temp
-        Log.d("상태","temp: $temp")
+    fun insertData(disease: Disease){
+        CoroutineScope(Dispatchers.IO).launch {
+            diseaseRepository.insertData(disease)
+            _disease.postValue(diseaseRepository.getData())
+        }
     }
 
-    fun addDiseaseData(data: Disease) {
-        temp.add(data)
-        Log.d("상태","temp: $temp disease: ${disease.value}")
-        _disease.value = temp
+    fun getDataSize(): Int{
+        var size = 0
+        CoroutineScope(Dispatchers.IO).launch {
+            size = diseaseRepository.getData().size
+        }
+        return size
     }
 
-    fun removeDiseaseData(data: Disease) {
-        temp.remove(data)
-        _disease.value = temp
-    }
 
-    fun clearDiseaseData() {
-        temp.clear()
-        _disease.value = temp
-    }
 
     //사용자의 질병 일관 변경
 //    fun updateGuardiansData = viewModelScope.launch {

@@ -26,8 +26,8 @@ class DialogGuardianInformation(
             textName.text = this@DialogGuardianInformation.name
             textRelationship.text = this@DialogGuardianInformation.relationship
             textPhoneNumber.text = this@DialogGuardianInformation.phoneNumber
-            buttonNo.setOnClickListener { TODO("보호자 정보 편집으로 넘어가기") }
-            buttonYes.setOnClickListener { dismiss() }
+            buttonNo.setOnClickListener { dismiss() }
+            buttonYes.setOnClickListener { TODO("보호자 정보 편집으로 넘어가기") }
         }
     }
 

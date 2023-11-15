@@ -1,8 +1,6 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
-import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
@@ -24,13 +22,18 @@ class DialogDiseaseAdd(val roomDB: AppDatabase?) :
 
     override val viewModel: DiseaseViewModel by activityViewModels()
 
-    override fun getViewModelClass(): Class<DiseaseViewModel> =
-        DiseaseViewModel::class.java
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun start() {
         buttonClickEvent()
         buttonEnabled()
+        with(viewModel) {
+            disease.observe(this@DialogDiseaseAdd) {
+                Log.d("질병",it.toString())
+//                diseaseDisorderInformationData = it.map { diseaseData ->
+//                    DiseaseDisorder(diseaseData.name, diseaseData.date)
+//                }
+//                updateDiseaseUI(diseaseDisorderInformationData)
+            }
+        }
     }
 
     private fun buttonClickEvent() {
@@ -38,24 +41,23 @@ class DialogDiseaseAdd(val roomDB: AppDatabase?) :
             buttonNo.setOnClickListener(OnSingleClickListener { dismiss() })
             buttonYes.setOnClickListener(OnSingleClickListener {
                 if (NetworkManager.checkNetworkState(requireContext())) {
-//                    viewModel.api
+
                 }
-                roomDB(editTextDisease.text.toString())
-                viewModel.updateDiseaseData(roomDB!!.diseaseDao().getAll())
+                CoroutineScope(Dispatchers.IO).launch {
+                    roomDB(editTextDisease.text.toString())
+                }
                 dismiss()
             })
         }
     }
 
     private fun roomDB(disease: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val format = "yyyy-MM-dd"
-            val simpleDateFormat = SimpleDateFormat(format)
-            val time = Date(System.currentTimeMillis())
-            val date: String = simpleDateFormat.format(time)
-            roomDB!!.diseaseDao()
-                .insertItem(Disease(index = 0, name = disease, date = date))
-        }
+        val format = "yyyy-MM-dd"
+        val simpleDateFormat = SimpleDateFormat(format)
+        val time = Date(System.currentTimeMillis())
+        val date: String = simpleDateFormat.format(time)
+        val dataSize = viewModel.getDataSize()
+        viewModel.insertData(Disease(dataSize, disease, date))
     }
 
     private fun buttonEnabled() {
@@ -63,7 +65,6 @@ class DialogDiseaseAdd(val roomDB: AppDatabase?) :
             buttonYes.isEnabled = false
             editTextDisease.addTextChangedListener {
                 buttonYes.isEnabled = !it.isNullOrEmpty()
-                Log.d("추가", it.isNullOrEmpty().toString() + " ${it.toString()}")
             }
         }
     }
