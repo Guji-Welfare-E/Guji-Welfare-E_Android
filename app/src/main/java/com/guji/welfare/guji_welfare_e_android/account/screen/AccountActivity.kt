@@ -28,7 +28,7 @@ class AccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[DiseaseViewModel::class.java]
+        viewModel = ViewModelProvider(this)[DiseaseViewModel(application)::class.java]
         transactionFragment(loginFragment)
     }
 
