@@ -1,13 +1,14 @@
 package com.guji.welfare.guji_welfare_e_android.main.screen
 
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.guji.welfare.guji_welfare_e_android.R
@@ -25,8 +26,8 @@ import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardanInformationFi
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformationAdd
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectNickName
-import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangeNickName
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogDiseaseAdd
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectCall
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogWelfareworkerRegistration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.DiseaseDisorderInformationListAdapter
 import com.guji.welfare.guji_welfare_e_android.main.adapter.GuardianInformationListAdapter
@@ -34,9 +35,10 @@ import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInforma
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.DiseaseDisorderInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.GuardianInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.service.TimeCheckService
-import com.guji.welfare.guji_welfare_e_android.main.viewmodel.DiseaseViewModel
-import com.guji.welfare.guji_welfare_e_android.main.viewmodel.GuardianViewModel
 import com.guji.welfare.guji_welfare_e_android.main.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main),
@@ -45,16 +47,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     override val viewModel: MainViewModel by viewModels()
 
-    private lateinit var diseaseViewModel: DiseaseViewModel
-    private lateinit var guardianViewModel: GuardianViewModel
-
     private var guardianListData: List<GuardianInformationData> = listOf()
     private var diseaseDisorderInformationData: List<DiseaseDisorder> = listOf()
+
     private val guardiaInformationAdapter = GuardianInformationListAdapter()
     private val diseaseDisorderInformationListAdapter = DiseaseDisorderInformationListAdapter()
     private val diseaseDisorderInformationDecoration = DiseaseDisorderInformationDecoration()
     private val guardianInformationDecoration = GuardianInformationDecoration()
-
 
     private val permission: Array<String> = arrayOf(
         android.Manifest.permission.CALL_PHONE,
@@ -64,32 +63,41 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     private var roomDB: AppDatabase? = null
 
-    override fun start() {
-        diseaseViewModel = ViewModelProvider(this)[DiseaseViewModel::class.java]
-        guardianViewModel = ViewModelProvider(this)[GuardianViewModel::class.java]
-        roomDB = AppDatabase.getInstance(this)
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         installSplashScreen()
 
         val behavior = BottomSheetBehavior.from(binding.bottomSheet)
         behavior.peekHeight = 1400
 
         ActivityCompat.requestPermissions(this, permission, 0)
+    }
+
+    override fun start() {
+        roomDB = AppDatabase.getInstance(this)
+        CoroutineScope(Dispatchers.IO).launch {
+            setOffline()
+            updateWelfareworkerUI()
+        }
 
         setAdapter()
+        updateDiseaseUI(diseaseDisorderInformationData)
+        updateGuardianUI(guardianListData)
+
+        serviceStart()
         setClickListener()
         switch()
-        serviceStart()
 
-        with(viewModel){
+        with(viewModel) {
             getUserData()
             userData.observe(this@MainActivity) {
                 updateMyInformationUI(it)
             }
         }
 
-        with(diseaseViewModel){
-            disease.observe(this@MainActivity){
+        with(diseaseViewModel) {
+            disease.observe(this@MainActivity) {
+                Log.d("질병", it.toString())
                 diseaseDisorderInformationData = it.map { diseaseData ->
                     DiseaseDisorder(diseaseData.name, diseaseData.date)
                 }
@@ -97,17 +105,37 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             }
         }
 
-        with(guardianViewModel){
-            guardian.observe(this@MainActivity){
+        with(guardianViewModel) {
+            guardian.observe(this@MainActivity) {
                 guardianListData = it
                 updateGuardianUI(guardianListData)
             }
         }
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
         AppDatabase.destroyInstance()
+    }
+
+    private suspend fun setOffline() {
+        CoroutineScope(Dispatchers.IO).launch {
+            //RoomDB에 저장 되어 있는 값 꺼내오기
+            guardianListData = roomDB!!.guardiansDao().getAll().map {
+                GuardianInformationData(it.name, it.telephoneNum, it.info)
+            }
+            Log.d("보호자", guardianListData.toString())
+
+            diseaseDisorderInformationData = roomDB!!.diseaseDao().getAll().map {
+                DiseaseDisorder(it.name, it.date)
+            }
+            Log.d("질병", diseaseDisorderInformationData.toString())
+        }.join()
+
+
+        updateDiseaseUI(diseaseDisorderInformationData)
+        updateGuardianUI(guardianListData)
     }
 
     private fun switch() {
@@ -136,16 +164,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private fun autoSave() {
+    private fun autoSave(userDataDto: UserDataDto) {
         val save = App.prefs
-        with(binding) {
-            save.myName = textMyName.text.toString()
-            save.welfareworkerAffiliation = textWelfareWorkerAffiliation.text.toString()
-            save.welfareWorkerName = textWelfareWorkerName.text.toString()
-            save.welfareWorkerPhoneNumber = textWelfareWorkerPhoneNumber.text.toString()
-            save.myDwelling = textMyDwelling.text.toString()
-            save.myName = textMyName.text.toString()
-        }
+        val data = userDataDto.data
+        save.myName = data.name
+        save.myNickname = data.nickName
+        save.myDwelling = data.residence
+        save.myBirthday = data.birth
     }
 
     private fun setAdapter() {
@@ -183,7 +208,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             switchAutoBackground.setOnClickListener {
                 //TODO("시간 마다 배경화면 변경 아 하기 싫다")
             }
-            with(viewModel){
+
+            with(viewModel) {
                 switchGuardianInformation.setOnClickListener {
                     switchGuardianInformationStatus.value =
                         switchGuardianInformation.isChecked
@@ -200,6 +226,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                     switchDiseaseDisorderInformationStatus.value =
                         switchDiseaseDisorderInformation.isChecked
                 }
+
             }
 
             //drawer button
@@ -218,11 +245,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
+    private fun removeRoomDB() {
+        CoroutineScope(Dispatchers.IO).launch {
+            roomDB!!.guardiansDao().deleteAll()
+            roomDB!!.diseaseDao().deleteAll()
+        }
+    }
+
     private fun logout() {
         App.prefs.remove()
         cookieManager.clear()
-        roomDB!!.guardiansDao().deleteAll()
-        roomDB!!.diseaseDao().deleteAll()
+        removeRoomDB()
         Intent(this@MainActivity, AccountActivity::class.java).also {
             startActivity(it)
             finish()
@@ -233,8 +266,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     private fun secession() {
         App.prefs.remove()
         cookieManager.clear()
-        roomDB!!.guardiansDao().deleteAll()
-        roomDB!!.diseaseDao().deleteAll()
+        removeRoomDB()
         Intent(this@MainActivity, AccountActivity::class.java).also {
             startActivity(it)
             finish()
@@ -253,10 +285,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private fun updateDiseaseUI(diseaseDisorderData: List<DiseaseDisorder>){
-        with(binding){
-            if (diseaseDisorderData.isNullOrEmpty()) emptyDiseaseDisorder.visibility =
-                View.VISIBLE
+    private fun updateWelfareworkerUI() {
+        if (App.prefs.welfareWorkerName.isNotEmpty() && App.prefs.welfareWorkerPhoneNumber.isNotEmpty() && App.prefs.welfareWorkerBelong.isNotEmpty()) {
+            with(binding) {
+                layoutWelfareWorkerNull.visibility = View.GONE
+                layoutWelfareWorker.visibility = View.VISIBLE
+
+                textWelfareWorkerName.text = App.prefs.welfareWorkerName
+                textWelfareWorkerPhoneNumber.text = App.prefs.welfareWorkerPhoneNumber
+                textWelfareWorkerAffiliation.text = App.prefs.welfareWorkerBelong
+            }
+        } else {
+            binding.layoutWelfareWorkerNull.visibility = View.VISIBLE
+            binding.layoutWelfareWorker.visibility = View.GONE
+        }
+    }
+
+    private fun updateDiseaseUI(diseaseDisorderData: List<DiseaseDisorder>) {
+        with(binding) {
+            if (diseaseDisorderData.isNullOrEmpty()) {
+                emptyDiseaseDisorder.visibility = View.VISIBLE
+            }
             else {
                 emptyDiseaseDisorder.visibility = View.GONE
                 diseaseDisorderInformationListAdapter.submitList(diseaseDisorderData)
@@ -264,15 +313,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private fun updateGuardianUI(guardianDisorderData: List<GuardianInformationData>){
-        with(binding){
+    private fun updateGuardianUI(guardianDisorderData: List<GuardianInformationData>) {
+        with(binding) {
             if (guardianDisorderData.isNullOrEmpty()) {
-                recyclerViewGuardian.visibility = View.VISIBLE
-                emptyGuardian.visibility = View.GONE
-            }
-            else {
                 recyclerViewGuardian.visibility = View.GONE
                 emptyGuardian.visibility = View.VISIBLE
+            } else {
+                Log.d("업데이트", guardianListData.toString())
+                guardianListData = guardianDisorderData
+                recyclerViewGuardian.visibility = View.VISIBLE
+                emptyGuardian.visibility = View.GONE
                 guardiaInformationAdapter.submitList(guardianListData)
             }
         }
@@ -319,7 +369,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     private fun setDialogSelectCall(position: Int) {
         val phoneNumber = guardianListData[position].phoneNumber
-        val dialogSelectCall = DialogCheckChangeNickName(phoneNumber)
+        Log.d("전화번호", phoneNumber)
+        val dialogSelectCall = DialogSelectCall(phoneNumber)
         with(dialogSelectCall) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "selectCall")
@@ -327,7 +378,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogSelectCall(phoneNumber: String) {
-        val dialogSelectCall = DialogCheckChangeNickName(phoneNumber)
+        val dialogSelectCall = DialogSelectCall(phoneNumber)
         with(dialogSelectCall) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "selectCall")
@@ -369,7 +420,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     //Adapter Click Event fun
     override fun onClickDieaseInformation(v: View, position: Int) {
-
+        Log.d("질병/장애 정보",position.toString())
     }
 
     override fun onClick(v: View, position: Int) {

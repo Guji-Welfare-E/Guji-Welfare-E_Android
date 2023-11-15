@@ -25,9 +25,19 @@ class MainViewModel : BaseViewModel() {
         kotlin.runCatching {
             api.getUserData()
         }.onSuccess {
-            Log.d("상태",it.toString())
             _userData.value = it
+
             App.prefs.myNickname = it.data.nickName
+            App.prefs.myName = it.data.name
+            App.prefs.myBirthday = it.data.birth
+            App.prefs.myDwelling = it.data.residence
+
+            if(it.data.manager != null){
+                App.prefs.welfareWorkerName = it.data.manager.name
+                App.prefs.welfareWorkerPhoneNumber = it.data.manager.telephoneNum
+                App.prefs.welfareWorkerBelong = it.data.manager.belong
+            }
+
         }.onFailure {
             Log.e("애러",it.message.toString())
         }
