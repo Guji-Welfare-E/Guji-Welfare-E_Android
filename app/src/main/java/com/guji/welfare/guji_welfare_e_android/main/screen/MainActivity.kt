@@ -88,6 +88,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         setClickListener()
         switch()
 
+        refresh()
+
         with(viewModel) {
             getUserData()
             userData.observe(this@MainActivity) {
@@ -117,6 +119,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     override fun onDestroy() {
         super.onDestroy()
         AppDatabase.destroyInstance()
+    }
+
+    private fun refresh(){
+        binding.refreshLayout.setOnRefreshListener {
+            if(!isNetworkConnected(this@MainActivity)){
+                Toast.makeText(this, "네트워크에 연결 해주세요",Toast.LENGTH_SHORT).show()
+                binding.refreshLayout.isRefreshing = false
+            } else {
+                Toast.makeText(this, "네트워크됨",Toast.LENGTH_SHORT).show()
+                binding.refreshLayout.isRefreshing = false
+            }
+        }
     }
 
     private suspend fun setOffline() {
@@ -164,14 +178,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private fun autoSave(userDataDto: UserDataDto) {
-        val save = App.prefs
-        val data = userDataDto.data
-        save.myName = data.name
-        save.myNickname = data.nickName
-        save.myDwelling = data.residence
-        save.myBirthday = data.birth
-    }
 
     private fun setAdapter() {
         with(binding) {
