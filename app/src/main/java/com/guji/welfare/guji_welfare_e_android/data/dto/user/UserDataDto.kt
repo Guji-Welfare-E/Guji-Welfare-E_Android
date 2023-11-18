@@ -12,7 +12,7 @@ data class UserData(
     val residence: String,
     val birth: String,
     val manager: Manager?,
-    val guardian: List<String>,
+    val guardian: List<Guardian>?,
     val disease: List<DiseaseDisorder>?,
     val registerTime: String,
     val editTime: String,
@@ -29,4 +29,11 @@ data class Manager(
     val telephoneNum: String,
     val belong: String,
     val status: String
+)
+
+data class Guardian(
+    val name: String,
+    val telephoneNum: String,
+    val info: String,
+    val index: Int,
 )
