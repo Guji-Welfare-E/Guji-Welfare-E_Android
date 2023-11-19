@@ -40,11 +40,12 @@ class DialogDiseaseAdd(val roomDB: AppDatabase?) :
         with(binding) {
             buttonNo.setOnClickListener(OnSingleClickListener { dismiss() })
             buttonYes.setOnClickListener(OnSingleClickListener {
-                if (NetworkManager.checkNetworkState(requireContext())) {
-
-                }
                 CoroutineScope(Dispatchers.IO).launch {
                     roomDB(editTextDisease.text.toString())
+
+                    if (NetworkManager.checkNetworkState(requireContext())) {
+                        viewModel.updateGuardiansData(roomDB!!.guardiansDao().getAll())
+                    }
                 }
                 dismiss()
             })
