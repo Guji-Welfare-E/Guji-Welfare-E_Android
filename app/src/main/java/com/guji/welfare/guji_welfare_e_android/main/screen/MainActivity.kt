@@ -22,6 +22,8 @@ import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseaseDisorder
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
 import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient.cookieManager
 import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
+import com.guji.welfare.guji_welfare_e_android.data.room.disease.entity.Disease
+import com.guji.welfare.guji_welfare_e_android.data.room.guardians.entity.Guardians
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityMainBinding
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogChangePersonalInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangePassword
@@ -42,6 +44,7 @@ import com.guji.welfare.guji_welfare_e_android.main.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.activity_main),
@@ -78,27 +81,37 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     override fun start() {
         roomDB = AppDatabase.getInstance(this)
-        CoroutineScope(Dispatchers.IO).launch {
-            setOffline()
-            updateWelfareworkerUI()
-        }
-
         setAdapter()
-        updateDiseaseUI(diseaseDisorderInformationData)
-        updateGuardianUI(guardianListData)
-
-        serviceStart()
-        setClickListener()
-        switch()
-
-        refresh()
 
         with(viewModel) {
             getUserData()
             userData.observe(this@MainActivity) {
-                updateMyInformationUI(it)
+                Log.d("userData","userData 변경 : $it")
+                updateInformationUI(it)
+                updateInformation(it)
             }
+
+            if(userData.value != null){
+                updateInformation(userData.value!!)
+                updateInformationUI(userData.value!!)
+            }
+
+
+            CoroutineScope(Dispatchers.IO).launch {
+                //RoomDB에 저장 되어 있는 값 꺼내오기
+                setOffline()
+            }
+            updateWelfareworkerUI()
         }
+
+        refresh()
+//
+//        updateDiseaseUI(diseaseDisorderInformationData)
+//        updateGuardianUI(guardianListData)
+
+        serviceStart()
+        setClickListener()
+        switch()
 
         with(diseaseViewModel) {
             disease.observe(this@MainActivity) {
@@ -136,23 +149,67 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
+    private fun updateInformation(userDataDto: UserDataDto) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val guardianData = userDataDto.data.guardian
+            val diseaseData = userDataDto.data.disease
+
+            if (guardianData != null) {
+                roomDB!!.guardiansDao().deleteAll()
+                var index = 0
+                guardianData.map {
+                    Log.d("guardians", it.toString())
+                    roomDB!!.guardiansDao().insertItem(
+                        Guardians(
+                            index = index,
+                            info = it.info,
+                            name = it.name,
+                            telephoneNum = it.telephoneNum
+                        )
+                    )
+                    index++
+                }
+            } else {
+                roomDB!!.guardiansDao().deleteAll()
+            }
+
+            if (diseaseData != null) {
+                roomDB!!.diseaseDao().deleteAll()
+                var index = 0
+                diseaseData.map {
+                    Log.d("disease", it.toString())
+                    roomDB!!.diseaseDao()
+                        .insertItem(Disease(date = it.createTime, name = it.name, index = index))
+                    index++
+                }
+            } else {
+                roomDB!!.diseaseDao().deleteAll()
+            }
+        }
+    }
+
+
+    /**
+     *
+     * */
     private suspend fun setOffline() {
         CoroutineScope(Dispatchers.IO).launch {
             //RoomDB에 저장 되어 있는 값 꺼내오기
             guardianListData = roomDB!!.guardiansDao().getAll().map {
                 GuardianInformationData(it.name, it.telephoneNum, it.info)
             }
-            Log.d("보호자", guardianListData.toString())
 
             diseaseDisorderInformationData = roomDB!!.diseaseDao().getAll().map {
                 DiseaseDisorder(it.name, it.date)
             }
-            Log.d("질병", diseaseDisorderInformationData.toString())
+
         }.join()
 
 
-        updateDiseaseUI(diseaseDisorderInformationData)
-        updateGuardianUI(guardianListData)
+        withContext(Dispatchers.Main){
+            updateDiseaseUI(diseaseDisorderInformationData)
+            updateGuardianUI(guardianListData)
+        }
     }
 
     private fun isNetworkConnected(context: Context): Boolean {
@@ -192,7 +249,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             }
         }
     }
-
 
     private fun setAdapter() {
         with(binding) {
@@ -273,36 +329,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private fun logout() {
-        App.prefs.remove()
-        cookieManager.clear()
-        removeRoomDB()
-        Intent(this@MainActivity, AccountActivity::class.java).also {
-            startActivity(it)
-            finish()
-        }
-        Toast.makeText(this@MainActivity, "로그아웃됨", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun secession() {
-        App.prefs.remove()
-        cookieManager.clear()
-        removeRoomDB()
-        Intent(this@MainActivity, AccountActivity::class.java).also {
-            startActivity(it)
-            finish()
-        }
-    }
-
     private fun changeInformation() {
         setDialogChangePersonalInformation()
     }
 
-    private fun updateMyInformationUI(userDataDto: UserDataDto) {
+    private fun updateInformationUI(userDataDto: UserDataDto) {
         with(binding) {
             textMyName.text = userDataDto.data.name
             textMyDwelling.text = userDataDto.data.residence
             textMyNickname.text = userDataDto.data.nickName
+
+            if (App.prefs.welfareWorkerName.isNotEmpty() && App.prefs.welfareWorkerPhoneNumber.isNotEmpty() && App.prefs.welfareWorkerBelong.isNotEmpty()) {
+                layoutWelfareWorkerNull.visibility = View.GONE
+                layoutWelfareWorker.visibility = View.VISIBLE
+
+                textWelfareWorkerName.text = App.prefs.welfareWorkerName
+                textWelfareWorkerPhoneNumber.text = App.prefs.welfareWorkerPhoneNumber
+                textWelfareWorkerAffiliation.text = App.prefs.welfareWorkerBelong
+            } else {
+                layoutWelfareWorkerNull.visibility = View.VISIBLE
+                layoutWelfareWorker.visibility = View.GONE
+            }
         }
     }
 
@@ -326,8 +373,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         with(binding) {
             if (diseaseDisorderData.isNullOrEmpty()) {
                 emptyDiseaseDisorder.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 emptyDiseaseDisorder.visibility = View.GONE
                 diseaseDisorderInformationListAdapter.submitList(diseaseDisorderData)
             }
@@ -340,7 +386,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                 recyclerViewGuardian.visibility = View.GONE
                 emptyGuardian.visibility = View.VISIBLE
             } else {
-                Log.d("업데이트", guardianListData.toString())
                 guardianListData = guardianDisorderData
                 recyclerViewGuardian.visibility = View.VISIBLE
                 emptyGuardian.visibility = View.GONE
@@ -348,6 +393,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             }
         }
     }
+
 
     private fun setDialogGuardianInformation(position: Int) {
         val data = guardianListData[position]
@@ -439,9 +485,30 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
 
-    //Adapter Click Event fun
+    private fun logout() {
+        App.prefs.remove()
+        cookieManager.clear()
+        removeRoomDB()
+        Intent(this@MainActivity, AccountActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
+        Toast.makeText(this@MainActivity, "로그아웃됨", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun secession() {
+        App.prefs.remove()
+        cookieManager.clear()
+        removeRoomDB()
+        Intent(this@MainActivity, AccountActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
+    }
+
+
     override fun onClickDieaseInformation(v: View, position: Int) {
-        Log.d("질병/장애 정보",position.toString())
+        Log.d("질병/장애 정보", position.toString())
     }
 
     override fun onClick(v: View, position: Int) {
