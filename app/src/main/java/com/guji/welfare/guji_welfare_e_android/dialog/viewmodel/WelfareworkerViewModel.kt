@@ -19,7 +19,6 @@ class WelfareworkerViewModel: BaseViewModel() {
             api.updateManagerData(phoneNumber)
         }.onSuccess{
             _welfareworkerPhoneNumber.value = phoneNumber
-            //복지사 정보 저장 서버에서 복지사 정보 안줘서 못하는중
             val data = it.data
             App.prefs.welfareWorkerName = data.name
             App.prefs.welfareWorkerPhoneNumber = data.telephoneNum

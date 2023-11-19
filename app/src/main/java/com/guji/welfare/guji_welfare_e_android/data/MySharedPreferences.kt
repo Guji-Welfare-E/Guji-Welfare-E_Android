@@ -30,19 +30,21 @@ class MySharedPreferences(context: Context) {
 
     fun remove(){
         App.prefs.autoLogin = false
+
         //Token
         prefs.edit().remove(PREF_KEY_ACCESS_TOKEN).apply()
         prefs.edit().remove(PREF_KEY_REFRESH_TOKEN).apply()
+
         //My Information
         prefs.edit().remove(PREF_KEY_MY_NAME).apply()
         prefs.edit().remove(PREF_KEY_MY_NICKNAME).apply()
         prefs.edit().remove(PREF_KEY_MY_DWELLING).apply()
         prefs.edit().remove(PREF_KEY_MY_BIRTHDAY).apply()
+
         //WelfareWorker
         prefs.edit().remove(PREF_KEY_WELFAREWORKER_NAME).apply()
         prefs.edit().remove(PREF_KEY_WELFAREWORKER_PHONENUMBER).apply()
         prefs.edit().remove(PREF_KEY_WELFAREWORKER_BELONG).apply()
-
     }
 
     var autoLogin: Boolean

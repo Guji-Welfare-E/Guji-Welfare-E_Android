@@ -26,20 +26,21 @@ class MainViewModel : BaseViewModel() {
             api.getUserData()
         }.onSuccess {
             _userData.value = it
+            Log.d("내 정보",_userData.value.toString())
 
             App.prefs.myNickname = it.data.nickName
             App.prefs.myName = it.data.name
             App.prefs.myBirthday = it.data.birth
             App.prefs.myDwelling = it.data.residence
 
-            if(it.data.manager != null){
+            if (it.data.manager != null) {
                 App.prefs.welfareWorkerName = it.data.manager.name
                 App.prefs.welfareWorkerPhoneNumber = it.data.manager.telephoneNum
                 App.prefs.welfareWorkerBelong = it.data.manager.belong
             }
 
         }.onFailure {
-            Log.e("애러",it.message.toString())
+            Log.e("애러", it.message.toString())
         }
     }
 }
