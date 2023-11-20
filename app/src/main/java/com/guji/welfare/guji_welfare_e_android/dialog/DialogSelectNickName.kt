@@ -1,36 +1,33 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
-import android.os.Bundle
-import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogCheckChangeNicknameBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogCheckChangeNickNameViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.UserDataViewModel
 
 class DialogSelectNickName(nickname: String) :
-    BaseDialogFragment<DialogCheckChangeNicknameBinding, DialogCheckChangeNickNameViewModel>(
+    BaseDialogFragment<DialogCheckChangeNicknameBinding, UserDataViewModel>(
         R.layout.dialog_check_change_nickname
     ) {
 
     private val nickname: String
-    override fun getViewModelClass(): Class<DialogCheckChangeNickNameViewModel> =
-        DialogCheckChangeNickNameViewModel::class.java
+    override val viewModel: UserDataViewModel by activityViewModels()
 
     init {
         this.nickname = nickname
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun start() {
         with(binding) {
             textNickname.text = nickname
 
-            buttonYes.setOnClickListener { setDialogChangeNickName(); dismiss()}
+            buttonYes.setOnClickListener { setDialogChangeNickName(); dismiss() }
             buttonNo.setOnClickListener { dismiss() }
         }
     }
 
-    private fun setDialogChangeNickName(){
+    private fun setDialogChangeNickName() {
         val dialogChangeNickName = DialogChangeNickName()
         val fragmentManager = requireActivity().supportFragmentManager
         dialogChangeNickName.show(fragmentManager, "changeNickName")

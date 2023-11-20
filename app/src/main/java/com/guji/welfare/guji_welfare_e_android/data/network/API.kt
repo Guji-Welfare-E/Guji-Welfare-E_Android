@@ -6,6 +6,7 @@ import com.guji.welfare.guji_welfare_e_android.data.dto.account.LoginResponseDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.SignupRequestDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.GuardianDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.WelfareworkerDataDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,7 +33,7 @@ interface API {
 
     //사용자의 복지사 변경
     @PATCH("/v2/user/update/manager")
-    suspend fun updateManagerData(@Query("manager") manager: String): StatusDto
+    suspend fun updateManagerData(@Query("manager") manager: String): WelfareworkerDataDto
 
     //사용자의 보호자 일괄 변경
     @PATCH("v2/user/update/guardians")

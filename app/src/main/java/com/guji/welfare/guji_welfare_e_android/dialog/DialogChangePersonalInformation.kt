@@ -1,20 +1,18 @@
 package com.guji.welfare.guji_welfare_e_android.dialog
 
-import android.os.Bundle
-import android.view.View
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogChangePersonalInformationBinding
-import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogChangePersonalInformationViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.UserDataViewModel
 
-class DialogChangePersonalInformation: BaseDialogFragment<DialogChangePersonalInformationBinding, DialogChangePersonalInformationViewModel>(
+class DialogChangePersonalInformation: BaseDialogFragment<DialogChangePersonalInformationBinding, UserDataViewModel>(
     R.layout.dialog_change_personal_information) {
 
-    override fun getViewModelClass(): Class<DialogChangePersonalInformationViewModel> = DialogChangePersonalInformationViewModel::class.java
+    override val viewModel: UserDataViewModel by activityViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun start() {
         setEditText()
         clickListener()
     }

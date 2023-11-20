@@ -15,6 +15,7 @@ class GuardianInformationListAdapter :
         R.layout.item_guardia_information
     ) {
     override fun action(data: GuardianInformationData, binding: ItemGuardiaInformationBinding) {
+        Log.d("상태",data.toString())
         with(binding) {
             name.text = data.name
             phoneNumber.text = data.phoneNumber
@@ -33,21 +34,22 @@ class GuardianInformationListAdapter :
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        Log.d("상태","onBindViewHolder")
         with(holder) {
-            itemView.setOnClickListener(OnSingleClickListener {
-                itemClickListener.onClick(it, position)
-            })
             binding.callButton.setOnClickListener(OnSingleClickListener {
                 itemClickListener.onClickCall(it, position)
             })
+            binding.layoutChangeInformation.setOnClickListener(OnSingleClickListener {
+                itemClickListener.onClick(it, position)
+            })
         }
+        return holder.bind(getItem(position))
     }
 
     interface OnItemClickListener {
+        fun onClickCall(v: View, position: Int)
+
         fun onClick(v: View, position: Int)
 
-        fun onClickCall(v: View, position: Int)
     }
 
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {

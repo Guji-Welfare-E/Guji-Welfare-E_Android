@@ -16,21 +16,28 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.MainActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/button_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:backgroundTint="#00000000"
-                android:src="@drawable/ic_menu"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/button_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:backgroundTint="#00000000"
+                    android:src="@drawable/ic_menu"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="wrap_content"
@@ -72,7 +79,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30dp"
                                 android:fontFamily="@font/pretendard_bold"
-                                android:text="김명준"
+                                android:text=""
                                 android:textColor="@color/black"
                                 android:textSize="36sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -107,7 +114,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/pretendard_medium"
-                                android:text="대구광역시 달성군 구지면 창리로11길 93"
+                                android:text=""
                                 android:textColor="@color/black"
                                 android:textSize="15sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -142,7 +149,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
-                                android:visibility="gone"
+                                android:visibility="visible"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
@@ -200,12 +207,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
                                 android:gravity="center"
+                                android:visibility="gone"
                                 android:orientation="vertical"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
 
                                 <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/empty_message_text_1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/pretendard_bold"
@@ -214,6 +223,7 @@
                                     android:textSize="25sp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/empty_message_text_2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/pretendard_bold"
@@ -265,7 +275,8 @@
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycler_view_guardian"
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:overScrollMode="never" />
 
                             <androidx.appcompat.widget.AppCompatTextView
@@ -356,7 +367,6 @@
             </LinearLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <!--drawer layout-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main_drawer_view"
             android:layout_width="250dp"

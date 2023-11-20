@@ -2,19 +2,18 @@ package com.guji.welfare.guji_welfare_e_android.dialog
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
 import com.guji.welfare.guji_welfare_e_android.data.room.guardians.entity.Guardians
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogGuardianInformationAddBinding
 import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
-import com.guji.welfare.guji_welfare_e_android.main.viewmodel.GuardianViewModel
+import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.GuardianViewModel
 import com.guji.welfare.guji_welfare_e_android.util.NetworkManager
 import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class DialogGuardianInformationAdd(roomDB: AppDatabase?) :
+class DialogGuardianInformationAdd(roomDB: AppDatabase?):
     BaseDialogFragment<DialogGuardianInformationAddBinding, GuardianViewModel>(
         R.layout.dialog_guardian_information_add
     ) {
@@ -32,12 +31,11 @@ class DialogGuardianInformationAdd(roomDB: AppDatabase?) :
     private lateinit var phoneNumber: String
     private lateinit var requestLauncher: ActivityResultLauncher<Intent>
 
-    private val roomDB = roomDB
-    override fun getViewModelClass(): Class<GuardianViewModel> =
-        GuardianViewModel::class.java
+    override val viewModel: GuardianViewModel by activityViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    private val roomDB = roomDB
+    override fun start() {
         getPhoneData()
         buttonEvent()
     }
@@ -50,18 +48,21 @@ class DialogGuardianInformationAdd(roomDB: AppDatabase?) :
                 phoneNumber = textGuardianPhoneNumber.text.toString()
                 if (name.isNotEmpty() && relationship.isNotEmpty() && phoneNumber.isNotEmpty()) {
                     CoroutineScope(Dispatchers.IO).launch {
-                        roomDB!!.guardiansDao()
-                            .insertItem(Guardians(0, name, phoneNumber, relationship))
-                    }
-                    val guardiansData = roomDB!!.guardiansDao().getAll()
-                    viewModel.updateGuardiansData(guardiansData.map {
-                        GuardianInformationData(it.name, it.telephoneNum, it.info)
-                    })
-                    if (NetworkManager.checkNetworkState(requireContext())) {
-                        val data = roomDB.guardiansDao().getAll()
-                        viewModel.updateGuardiansData(data.map {
-                            GuardianInformationData(it.name, it.info, it.telephoneNum)
+                        var guardiansData = roomDB!!.guardiansDao().getAll()
+                        roomDB.guardiansDao()
+                            .insertItem(Guardians(guardiansData.size, name, phoneNumber, relationship))
+                        guardiansData = roomDB.guardiansDao().getAll()
+                        viewModel.updateGuardiansData(guardiansData.map {
+                            GuardianInformationData(it.name, it.telephoneNum, it.info)
                         })
+                    }
+                    if (NetworkManager.checkNetworkState(requireContext())) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val data = roomDB!!.guardiansDao().getAll()
+                            viewModel.updateGuardiansData(data.map {
+                                GuardianInformationData(it.name, it.info, it.telephoneNum)
+                            })
+                        }
                     }
                     dismiss()
                 } else {

@@ -5,7 +5,7 @@
     <data>
         <variable
             name="dialogGuardianInformationFix"
-            type="com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.DialogGuardianInformationFixViewModel" />
+            type="com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.GuardianViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"

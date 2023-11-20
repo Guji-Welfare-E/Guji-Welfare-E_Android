@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.guji.welfare.guji_welfare_e_android.data.room.disease.entity.Disease
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DiseaseDao {

@@ -4,7 +4,7 @@
     <data>
     <variable
         name="dialogGuardianInformation"
-        type="com.guji.welfare.guji_welfare_e_android.main.screen.MainActivity" />
+        type="com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.GuardianViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
