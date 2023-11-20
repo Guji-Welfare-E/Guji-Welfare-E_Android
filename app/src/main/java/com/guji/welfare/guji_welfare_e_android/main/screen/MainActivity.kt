@@ -130,6 +130,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             }
         }
 
+        Log.d("SharedPreferences",App.prefs.refreshToken)
+        Log.d("SharedPreferences",App.prefs.accessToken)
+        Log.d("SharedPreferences",App.prefs.welfareWorkerName)
+        Log.d("SharedPreferences",App.prefs.welfareWorkerBelong)
+        Log.d("SharedPreferences",App.prefs.welfareWorkerPhoneNumber)
+        Log.d("SharedPreferences",App.prefs.myBirthday)
+        Log.d("SharedPreferences",App.prefs.myNickname)
+        Log.d("SharedPreferences",App.prefs.myDwelling)
+        Log.d("SharedPreferences",App.prefs.myName)
+
     }
 
     override fun onDestroy() {
@@ -137,13 +147,31 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         AppDatabase.destroyInstance()
     }
 
-    private fun refresh(){
+    private fun refresh() {
         binding.refreshLayout.setOnRefreshListener {
-            if(!isNetworkConnected(this@MainActivity)){
-                Toast.makeText(this, "네트워크에 연결 해주세요",Toast.LENGTH_SHORT).show()
+            if (!isNetworkConnected(this@MainActivity)) {
+                Toast.makeText(this, "네트워크에 연결 해주세요", Toast.LENGTH_SHORT).show()
                 binding.refreshLayout.isRefreshing = false
             } else {
-                Toast.makeText(this, "네트워크됨",Toast.LENGTH_SHORT).show()
+                with(viewModel) {
+                    getUserData()
+                    userData.observe(this@MainActivity) {
+                        updateInformationUI(it)
+                        updateInformation(it)
+                    }
+
+                    if(userData.value != null){
+                        updateInformation(userData.value!!)
+                        updateInformationUI(userData.value!!)
+                    }
+                }
+
+
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    //RoomDB에 저장 되어 있는 값 꺼내오기
+                    setOffline()
+                }
                 binding.refreshLayout.isRefreshing = false
             }
         }
@@ -205,6 +233,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
         }.join()
 
+        Log.d("Room", "guardianListData : $guardianListData")
+        Log.d("Room", "diseaseDisorderInformationData : $diseaseDisorderInformationData")
 
         withContext(Dispatchers.Main){
             updateDiseaseUI(diseaseDisorderInformationData)
