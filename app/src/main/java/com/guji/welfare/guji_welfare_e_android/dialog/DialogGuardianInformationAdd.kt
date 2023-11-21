@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.GuardianDto
 import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
 import com.guji.welfare.guji_welfare_e_android.data.room.guardians.entity.Guardians
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogGuardianInformationAddBinding
@@ -21,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class DialogGuardianInformationAdd(roomDB: AppDatabase?):
+class DialogGuardianInformationAdd(roomDB: AppDatabase?) :
     BaseDialogFragment<DialogGuardianInformationAddBinding, GuardianViewModel>(
         R.layout.dialog_guardian_information_add
     ) {
@@ -33,40 +34,25 @@ class DialogGuardianInformationAdd(roomDB: AppDatabase?):
 
     override val viewModel: GuardianViewModel by activityViewModels()
 
-
     private val roomDB = roomDB
     override fun start() {
         getPhoneData()
         buttonEvent()
     }
 
-    private fun buttonEvent(){
+    private fun buttonEvent() {
         with(binding) {
             buttonYes.setOnClickListener(OnSingleClickListener {
                 name = textGuardianName.text.toString()
                 relationship = textGuardianRelationship.text.toString()
                 phoneNumber = textGuardianPhoneNumber.text.toString()
                 if (name.isNotEmpty() && relationship.isNotEmpty() && phoneNumber.isNotEmpty()) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        var guardiansData = roomDB!!.guardiansDao().getAll()
-                        roomDB.guardiansDao()
-                            .insertItem(Guardians(guardiansData.size, name, phoneNumber, relationship))
-                        guardiansData = roomDB.guardiansDao().getAll()
-                        viewModel.updateGuardiansData(guardiansData.map {
-                            GuardianInformationData(it.name, it.telephoneNum, it.info)
-                        })
-                    }
-                    if (NetworkManager.checkNetworkState(requireContext())) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val data = roomDB!!.guardiansDao().getAll()
-                            viewModel.updateGuardiansData(data.map {
-                                GuardianInformationData(it.name, it.info, it.telephoneNum)
-                            })
-                        }
-                    }
+                    updateGuardian()
                     dismiss()
                 } else {
-                    Log.d("상태","name :$name, relationship :$relationship, phoneNumber: $phoneNumber")
+                    Log.d(
+                        "상태", "name :$name, relationship :$relationship, phoneNumber: $phoneNumber"
+                    )
                 }
             })
             buttonNo.setOnClickListener(OnSingleClickListener {
@@ -75,8 +61,27 @@ class DialogGuardianInformationAdd(roomDB: AppDatabase?):
         }
     }
 
+    private fun updateGuardian() {
+        CoroutineScope(Dispatchers.IO).launch {
+            var guardiansData = roomDB!!.guardiansDao().getAll()
+            roomDB.guardiansDao()
+                .insertItem(Guardians(guardiansData.size, name, phoneNumber, relationship))
+            guardiansData = roomDB.guardiansDao().getAll()
+            viewModel.updateGuardiansData(guardiansData.map {
+                GuardianInformationData(it.name, it.telephoneNum, it.info)
+            })
+            //네트워크에 연결 되어 있으면
+            if (NetworkManager.checkNetworkState(requireContext())) {
+                //서버로 값 전송
+                viewModel.updateGuardiansData(guardiansData.map {
+                    GuardianDto(it.name, it.telephoneNum, it.info, it.index)
+                })
+            }
+        }
+    }
+
     private fun getPhoneData() {
-        binding.buttonFindPhoneNumber.setOnClickListener (OnSingleClickListener {
+        binding.buttonFindPhoneNumber.setOnClickListener(OnSingleClickListener {
             val intent =
                 Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)
             requestLauncher.launch(intent)
@@ -86,14 +91,10 @@ class DialogGuardianInformationAdd(roomDB: AppDatabase?):
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     val cursor = requireActivity().contentResolver.query(
-                        it.data!!.data!!,
-                        arrayOf(
+                        it.data!!.data!!, arrayOf(
                             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                             ContactsContract.CommonDataKinds.Phone.NUMBER,
-                        ),
-                        null,
-                        null,
-                        null
+                        ), null, null, null
                     )
 
                     if (cursor!!.moveToFirst()) {
