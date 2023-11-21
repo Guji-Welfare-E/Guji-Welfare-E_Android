@@ -4,6 +4,7 @@ import com.guji.welfare.guji_welfare_e_android.data.dto.StatusDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.LoginRequestDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.LoginResponseDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.account.SignupRequestDto
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseasesDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.GuardianDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.WelfareworkerDataDto
@@ -38,6 +39,10 @@ interface API {
     //사용자의 보호자 일괄 변경
     @PATCH("v2/user/update/guardians")
     suspend fun updateGuardiansData(@Body guardianDto: List<GuardianDto>): StatusDto
+
+    //사용자의 질병 일괄 변경
+    @PATCH("v2/user/update/diseases")
+    suspend fun updateDiseasesData(@Body diseasesDto: List<DiseasesDto>): StatusDto
 
     //사용자 별칭 랜덤 변경
     @PATCH("v2/user/update/nickname")

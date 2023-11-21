@@ -5,6 +5,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseasesDto
 import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
 import com.guji.welfare.guji_welfare_e_android.data.room.disease.entity.Disease
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogDiseaseAddBinding
@@ -25,15 +26,6 @@ class DialogDiseaseAdd(val roomDB: AppDatabase?) :
     override fun start() {
         buttonClickEvent()
         buttonEnabled()
-        with(viewModel) {
-            disease.observe(this@DialogDiseaseAdd) {
-                Log.d("질병",it.toString())
-//                diseaseDisorderInformationData = it.map { diseaseData ->
-//                    DiseaseDisorder(diseaseData.name, diseaseData.date)
-//                }
-//                updateDiseaseUI(diseaseDisorderInformationData)
-            }
-        }
     }
 
     private fun buttonClickEvent() {
@@ -44,7 +36,10 @@ class DialogDiseaseAdd(val roomDB: AppDatabase?) :
                     roomDB(editTextDisease.text.toString())
 
                     if (NetworkManager.checkNetworkState(requireContext())) {
-                        viewModel.updateGuardiansData(roomDB!!.guardiansDao().getAll())
+                        Log.d("질병","추가")
+                        viewModel.updateGuardiansData(roomDB!!.diseaseDao().getAll().map {
+                            DiseasesDto(it.date, it.name)
+                        })
                     }
                 }
                 dismiss()
