@@ -1,6 +1,5 @@
 package com.guji.welfare.guji_welfare_e_android.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ class DiseaseDisorderInformationListAdapter: BaseListAdapter<DiseaseDisorder, It
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        Log.d("상태","onCreateViewHolder")
         return BaseViewHolder(
             ItemDiseaseDisorderInformationBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -36,7 +34,6 @@ class DiseaseDisorderInformationListAdapter: BaseListAdapter<DiseaseDisorder, It
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        Log.d("상태","onBindViewHolder")
         with(holder) {
             itemView.setOnClickListener(OnSingleClickListener {
                 itemClickListener.onClickDieaseInformation(it, position)

@@ -27,21 +27,20 @@ class DiseaseViewModel(application: Application) : AndroidViewModel(application)
     private val _disease = MutableLiveData<List<Disease>>()
     val disease: LiveData<List<Disease>> = _disease
 
-    fun insertData(disease: Disease){
+    fun insertData(disease: Disease) {
         CoroutineScope(Dispatchers.IO).launch {
             diseaseRepository.insertData(disease)
             _disease.postValue(diseaseRepository.getData())
         }
     }
 
-    fun getDataSize(): Int{
+    suspend fun getDataSize(): Int {
         var size = 0
         CoroutineScope(Dispatchers.IO).launch {
             size = diseaseRepository.getData().size
-        }
+        }.join()
         return size
     }
-
 
 
     //사용자의 질병 일관 변경
@@ -51,7 +50,7 @@ class DiseaseViewModel(application: Application) : AndroidViewModel(application)
         }.onSuccess {
 
         }.onFailure { e ->
-            Log.d("애러",e.message.toString())
+            Log.d("애러", e.message.toString() + " updateGuardiansData")
         }
     }
 }

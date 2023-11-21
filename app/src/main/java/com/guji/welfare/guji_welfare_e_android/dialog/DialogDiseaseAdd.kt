@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class DialogDiseaseAdd(val roomDB: AppDatabase?) :
+class DialogDiseaseAdd(private val roomDB: AppDatabase?) :
     BaseDialogFragment<DialogDiseaseAddBinding, DiseaseViewModel>(R.layout.dialog_disease_add) {
 
     override val viewModel: DiseaseViewModel by activityViewModels()
@@ -47,7 +47,7 @@ class DialogDiseaseAdd(val roomDB: AppDatabase?) :
         }
     }
 
-    private fun roomDB(disease: String) {
+    private suspend fun roomDB(disease: String) {
         val format = "yyyy-MM-dd"
         val simpleDateFormat = SimpleDateFormat(format)
         val time = Date(System.currentTimeMillis())
