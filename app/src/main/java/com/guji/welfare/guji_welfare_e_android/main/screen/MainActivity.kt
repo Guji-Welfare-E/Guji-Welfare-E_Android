@@ -19,6 +19,7 @@ import com.guji.welfare.guji_welfare_e_android.base.BaseActivity
 import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.account.screen.AccountActivity
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseaseDisorder
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.Guardian
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
 import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient.cookieManager
 import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
@@ -36,7 +37,6 @@ import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectCall
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogWelfareworkerRegistration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.DiseaseDisorderInformationListAdapter
 import com.guji.welfare.guji_welfare_e_android.main.adapter.GuardianInformationListAdapter
-import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.DiseaseDisorderInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.GuardianInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.service.TimeCheckService
@@ -53,7 +53,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     override val viewModel: MainViewModel by viewModels()
 
-    private var guardianListData: List<GuardianInformationData> = listOf()
+    private var guardianListData: List<Guardian> = listOf()
     private var diseaseDisorderInformationData: List<DiseaseDisorder> = listOf()
 
     private val guardiaInformationAdapter = GuardianInformationListAdapter()
@@ -73,6 +73,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
+        setAdapter()
+
         val behavior = BottomSheetBehavior.from(binding.bottomSheet)
         behavior.peekHeight = 1400
 
@@ -81,33 +83,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     override fun start() {
         roomDB = AppDatabase.getInstance(this)
-        setAdapter()
+        viewModel.getUserData()
 
-        with(viewModel) {
-            getUserData()
-            userData.observe(this@MainActivity) {
-                Log.d("userData","userData 변경 : $it")
-                updateInformationUI(it)
-                updateInformation(it)
+        viewModel.userData.observe(this@MainActivity) {
+            updateInformationUI(it)
+            updateInformation(it)
+            if(it.data.disease != null){
+                updateDiseaseUI(it.data.disease)
             }
-
-            if(userData.value != null){
-                updateInformation(userData.value!!)
-                updateInformationUI(userData.value!!)
+            if(it.data.guardian != null){
+                updateGuardianUI(it.data.guardian)
             }
-
-
-            CoroutineScope(Dispatchers.IO).launch {
-                //RoomDB에 저장 되어 있는 값 꺼내오기
-                setOffline()
-            }
-            updateWelfareworkerUI()
         }
 
-        refresh()
-//
-//        updateDiseaseUI(diseaseDisorderInformationData)
-//        updateGuardianUI(guardianListData)
+        CoroutineScope(Dispatchers.IO).launch {
+            //RoomDB에 저장 되어 있는 값 꺼내오기
+            setOffline()
+        }
+        updateWelfareworkerUI()
+
+//        refresh()
 
         serviceStart()
         setClickListener()
@@ -130,16 +125,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             }
         }
 
-        Log.d("SharedPreferences",App.prefs.refreshToken)
-        Log.d("SharedPreferences",App.prefs.accessToken)
-        Log.d("SharedPreferences",App.prefs.welfareWorkerName)
-        Log.d("SharedPreferences",App.prefs.welfareWorkerBelong)
-        Log.d("SharedPreferences",App.prefs.welfareWorkerPhoneNumber)
-        Log.d("SharedPreferences",App.prefs.myBirthday)
-        Log.d("SharedPreferences",App.prefs.myNickname)
-        Log.d("SharedPreferences",App.prefs.myDwelling)
-        Log.d("SharedPreferences",App.prefs.myName)
-
     }
 
     override fun onDestroy() {
@@ -160,12 +145,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                         updateInformation(it)
                     }
 
-                    if(userData.value != null){
+                    if (userData.value != null) {
                         updateInformation(userData.value!!)
                         updateInformationUI(userData.value!!)
                     }
                 }
-
 
 
                 CoroutineScope(Dispatchers.IO).launch {
@@ -178,6 +162,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun updateInformation(userDataDto: UserDataDto) {
+        Log.d("updateInformation", userDataDto.toString())
         CoroutineScope(Dispatchers.IO).launch {
             val guardianData = userDataDto.data.guardian
             val diseaseData = userDataDto.data.disease
@@ -186,7 +171,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                 roomDB!!.guardiansDao().deleteAll()
                 var index = 0
                 guardianData.map {
-                    Log.d("guardians", it.toString())
                     roomDB!!.guardiansDao().insertItem(
                         Guardians(
                             index = index,
@@ -197,6 +181,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                     )
                     index++
                 }
+                Log.d("Guardian", roomDB!!.guardiansDao().getAll().toString())
             } else {
                 roomDB!!.guardiansDao().deleteAll()
             }
@@ -205,11 +190,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                 roomDB!!.diseaseDao().deleteAll()
                 var index = 0
                 diseaseData.map {
-                    Log.d("disease", it.toString())
                     roomDB!!.diseaseDao()
                         .insertItem(Disease(date = it.createTime, name = it.name, index = index))
                     index++
                 }
+                Log.d("disease", roomDB!!.diseaseDao().getAll().toString())
             } else {
                 roomDB!!.diseaseDao().deleteAll()
             }
@@ -224,7 +209,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         CoroutineScope(Dispatchers.IO).launch {
             //RoomDB에 저장 되어 있는 값 꺼내오기
             guardianListData = roomDB!!.guardiansDao().getAll().map {
-                GuardianInformationData(it.name, it.telephoneNum, it.info)
+                Guardian(it.name, it.telephoneNum, it.info, it.index)
             }
 
             diseaseDisorderInformationData = roomDB!!.diseaseDao().getAll().map {
@@ -236,7 +221,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         Log.d("Room", "guardianListData : $guardianListData")
         Log.d("Room", "diseaseDisorderInformationData : $diseaseDisorderInformationData")
 
-        withContext(Dispatchers.Main){
+        withContext(Dispatchers.Main) {
             updateDiseaseUI(diseaseDisorderInformationData)
             updateGuardianUI(guardianListData)
         }
@@ -365,17 +350,21 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     private fun updateInformationUI(userDataDto: UserDataDto) {
         with(binding) {
-            textMyName.text = userDataDto.data.name
-            textMyDwelling.text = userDataDto.data.residence
-            textMyNickname.text = userDataDto.data.nickName
 
-            if (App.prefs.welfareWorkerName.isNotEmpty() && App.prefs.welfareWorkerPhoneNumber.isNotEmpty() && App.prefs.welfareWorkerBelong.isNotEmpty()) {
+            App.prefs.myName = userDataDto.data.name
+            App.prefs.myNickname = userDataDto.data.nickName
+            App.prefs.myDwelling = userDataDto.data.residence
+
+            textMyName.text = App.prefs.myName
+            textMyDwelling.text = App.prefs.myDwelling
+            textMyNickname.text = App.prefs.myNickname
+
+            if (userDataDto.data.manager != null) {
                 layoutWelfareWorkerNull.visibility = View.GONE
                 layoutWelfareWorker.visibility = View.VISIBLE
-
-                textWelfareWorkerName.text = App.prefs.welfareWorkerName
-                textWelfareWorkerPhoneNumber.text = App.prefs.welfareWorkerPhoneNumber
-                textWelfareWorkerAffiliation.text = App.prefs.welfareWorkerBelong
+                textWelfareWorkerName.text = userDataDto.data.manager.name
+                textWelfareWorkerPhoneNumber.text = userDataDto.data.manager.telephoneNum
+                textWelfareWorkerAffiliation.text = userDataDto.data.manager.belong
             } else {
                 layoutWelfareWorkerNull.visibility = View.VISIBLE
                 layoutWelfareWorker.visibility = View.GONE
@@ -410,7 +399,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-    private fun updateGuardianUI(guardianDisorderData: List<GuardianInformationData>) {
+    private fun updateGuardianUI(guardianDisorderData: List<Guardian>) {
         with(binding) {
             if (guardianDisorderData.isNullOrEmpty()) {
                 recyclerViewGuardian.visibility = View.GONE
@@ -428,8 +417,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     private fun setDialogGuardianInformation(position: Int) {
         val data = guardianListData[position]
         val name = data.name
-        val relationship = data.relationship
-        val phoneNumber = data.phoneNumber
+        val relationship = data.info
+        val phoneNumber = data.telephoneNum
         val dialogGuardianInformation = DialogGuardianInformation(name, relationship, phoneNumber)
         with(dialogGuardianInformation) {
             isCancelable = false
@@ -465,7 +454,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogSelectCall(position: Int) {
-        val phoneNumber = guardianListData[position].phoneNumber
+        val phoneNumber = guardianListData[position].telephoneNum
         Log.d("전화번호", phoneNumber)
         val dialogSelectCall = DialogSelectCall(phoneNumber)
         with(dialogSelectCall) {
