@@ -7,7 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.App
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.account.viewmodel.AccountViewModel
@@ -26,7 +26,7 @@ import retrofit2.Response
 class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
     R.layout.fragment_login
 ) {
-    override val viewModel: AccountViewModel by viewModels()
+    override val viewModel: AccountViewModel by activityViewModels()
 
     private var accountToken = ""
     private var refreshToken = ""
@@ -35,12 +35,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
         ResourcesCompat.getFont(requireContext(), R.font.pretendard_bold)
     }
 
-
     override fun start() {
         onClickEvent()
     }
 
-    private fun onClickEvent(){
+    private fun onClickEvent() {
         with(binding) {
             buttonSignup.setOnClickListener(OnSingleClickListener {
                 val signupFragment = SignupFragment()
@@ -57,11 +56,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
             })
             buttonShowPassword.setOnClickListener {
                 if (buttonShowPassword.isChecked) {
-                    Log.d("비밀번호", "보임")
                     textPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     textPassword.typeface = pretendardBold
                 } else {
-                    Log.d("비밀번호", "안보임")
                     textPassword.inputType =
                         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                     textPassword.typeface = pretendardBold
@@ -69,7 +66,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
             }
         }
     }
-
 
     private fun transactionFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager
@@ -87,7 +83,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                 if (response.isSuccessful) {
                     accountToken = cookieManager.getTokenCookieValue("access-token") ?: ""
                     refreshToken = cookieManager.getTokenCookieValue("refresh-token") ?: ""
-                    Log.d("Cookie", "AccountToken : $accountToken, RefreshToken : $refreshToken")
 
                     if (binding.buttonMaintainLogin.isChecked) {
                         App.prefs.autoLogin = true
@@ -104,10 +99,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                     }
                 } else if (response.code() == 403) {
                     Toast.makeText(context, "비밀번호나 아이디가 틀렸습니다", Toast.LENGTH_SHORT).show()
-                    with(binding) {
-                        textPassword.setText("")
-                        textPhoneNumber.setText("")
-                    }
+                    binding.textPassword.setText("")
+                    binding.textPhoneNumber.setText("")
                 } else {
                     Toast.makeText(
                         context,
