@@ -34,13 +34,6 @@ class DialogDiseaseAdd(private val roomDB: AppDatabase?) :
             buttonYes.setOnClickListener(OnSingleClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     roomDB(editTextDisease.text.toString())
-
-                    if (NetworkManager.checkNetworkState(requireContext())) {
-                        Log.d("질병","추가")
-                        viewModel.updateGuardiansData(roomDB!!.diseaseDao().getAll().map {
-                            DiseasesDto(it.date, it.name)
-                        })
-                    }
                 }
                 dismiss()
             })
@@ -54,6 +47,13 @@ class DialogDiseaseAdd(private val roomDB: AppDatabase?) :
         val date: String = simpleDateFormat.format(time)
         val dataSize = viewModel.getDataSize()
         viewModel.insertData(Disease(dataSize, disease, date))
+
+        if (NetworkManager.checkNetworkState(requireContext())) {
+            Log.d("질병","추가")
+            viewModel.updateGuardiansData(roomDB!!.diseaseDao().getAll().map {
+                DiseasesDto(it.date, it.name)
+            })
+        }
     }
 
     private fun buttonEnabled() {
