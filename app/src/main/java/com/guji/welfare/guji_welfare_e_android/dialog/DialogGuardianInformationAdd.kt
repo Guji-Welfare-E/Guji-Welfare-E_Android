@@ -9,11 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.Guardian
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.GuardianDto
 import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
 import com.guji.welfare.guji_welfare_e_android.data.room.guardians.entity.Guardians
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogGuardianInformationAddBinding
-import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
 import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.GuardianViewModel
 import com.guji.welfare.guji_welfare_e_android.util.NetworkManager
 import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
@@ -68,7 +68,7 @@ class DialogGuardianInformationAdd(roomDB: AppDatabase?) :
                 .insertItem(Guardians(guardiansData.size, name, phoneNumber, relationship))
             guardiansData = roomDB.guardiansDao().getAll()
             viewModel.updateGuardiansData(guardiansData.map {
-                GuardianInformationData(it.name, it.telephoneNum, it.info)
+                Guardian(it.name, it.telephoneNum, it.info, it.index)
             })
             //네트워크에 연결 되어 있으면
             if (NetworkManager.checkNetworkState(requireContext())) {

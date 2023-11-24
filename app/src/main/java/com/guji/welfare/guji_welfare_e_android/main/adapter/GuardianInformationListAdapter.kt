@@ -1,25 +1,23 @@
 package com.guji.welfare.guji_welfare_e_android.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseListAdapter
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.Guardian
 import com.guji.welfare.guji_welfare_e_android.databinding.ItemGuardiaInformationBinding
-import com.guji.welfare.guji_welfare_e_android.main.adapter.data.GuardianInformationData
 import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
 
 class GuardianInformationListAdapter :
-    BaseListAdapter<GuardianInformationData, ItemGuardiaInformationBinding>(
+    BaseListAdapter<Guardian, ItemGuardiaInformationBinding>(
         R.layout.item_guardia_information
     ) {
-    override fun action(data: GuardianInformationData, binding: ItemGuardiaInformationBinding) {
-        Log.d("상태",data.toString())
+    override fun action(data: Guardian, binding: ItemGuardiaInformationBinding) {
         with(binding) {
             name.text = data.name
-            phoneNumber.text = data.phoneNumber
-            relationship.text = data.relationship
+            phoneNumber.text = data.telephoneNum
+            relationship.text = data.info
         }
     }
 
