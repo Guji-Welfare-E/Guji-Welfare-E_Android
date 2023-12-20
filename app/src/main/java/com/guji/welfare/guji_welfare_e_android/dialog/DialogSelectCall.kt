@@ -7,6 +7,7 @@ import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseDialogFragment
 import com.guji.welfare.guji_welfare_e_android.databinding.DialogSelectCallBinding
 import com.guji.welfare.guji_welfare_e_android.dialog.viewmodel.CallViewModel
+import com.guji.welfare.guji_welfare_e_android.start.screen.toFormatPhoneNumber
 import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
 
 class DialogSelectCall(val phoneNumber: String) :
@@ -16,7 +17,7 @@ class DialogSelectCall(val phoneNumber: String) :
 
     override fun start() {
         with(binding) {
-            phoneNumber.text = "${this@DialogSelectCall.phoneNumber}에 연결하시겠습니다?"
+            phoneNumber.text = "${this@DialogSelectCall.phoneNumber.toFormatPhoneNumber()}에 연결하시겠습니까?"
 
             buttonNo.setOnClickListener(OnSingleClickListener {
                 dismiss()

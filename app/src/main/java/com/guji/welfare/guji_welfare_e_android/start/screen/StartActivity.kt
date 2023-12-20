@@ -2,6 +2,7 @@ package com.guji.welfare.guji_welfare_e_android.start.screen
 
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.guji.welfare.guji_welfare_e_android.App
@@ -20,10 +21,10 @@ class StartActivity : BaseActivity<ActivityStartBinding, StartViewModel>(R.layou
     override val viewModel: StartViewModel by viewModels()
 
     override fun start() {
-        CoroutineScope(Main).launch{
+        CoroutineScope(Main).launch {
             delay(1500)
-            if(App.prefs.autoLogin){
-                Toast.makeText(this@StartActivity, "자동로그인",Toast.LENGTH_SHORT).show()
+            if (App.prefs.autoLogin) {
+                Toast.makeText(this@StartActivity, "자동로그인", Toast.LENGTH_SHORT).show()
                 Intent(this@StartActivity, MainActivity::class.java).also {
                     it.addFlags(FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(it)
@@ -37,5 +38,18 @@ class StartActivity : BaseActivity<ActivityStartBinding, StartViewModel>(R.layou
                 }
             }
         }
+    }
+}
+
+fun String.toFormatPhoneNumber(): String {
+    val digitsOnly = this.replace(Regex("[^0-9]"), "")
+    return when (digitsOnly.length) {
+        11 -> """${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3, 7)}-${
+            digitsOnly.substring(
+                7
+            )
+        }"""
+
+        else -> digitsOnly // 기본적으로는 원래의 문자열을 반환
     }
 }

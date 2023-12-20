@@ -25,21 +25,17 @@ class MainViewModel : BaseViewModel() {
         kotlin.runCatching {
             api.getUserData()
         }.onSuccess {
-            when(it.status){
-                200 -> {
-                    _userData.value = it
+            _userData.value = it
 
-                    App.prefs.myNickname = it.data.nickName
-                    App.prefs.myName = it.data.name
-                    App.prefs.myBirthday = it.data.birth
-                    App.prefs.myDwelling = it.data.residence
+            App.prefs.myNickname = it.data.nickName
+            App.prefs.myName = it.data.name
+            App.prefs.myBirthday = it.data.birth
+            App.prefs.myDwelling = it.data.residence
 
-                    if (it.data.manager != null) {
-                        App.prefs.welfareWorkerName = it.data.manager.name
-                        App.prefs.welfareWorkerPhoneNumber = it.data.manager.telephoneNum
-                        App.prefs.welfareWorkerBelong = it.data.manager.belong
-                    }
-                }
+            if (it.data.manager != null) {
+                App.prefs.welfareWorkerName = it.data.manager.name
+                App.prefs.welfareWorkerPhoneNumber = it.data.manager.telephoneNum
+                App.prefs.welfareWorkerBelong = it.data.manager.belong
             }
 
 

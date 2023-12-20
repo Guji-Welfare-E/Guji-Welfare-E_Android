@@ -7,6 +7,7 @@ import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.base.BaseListAdapter
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.Guardian
 import com.guji.welfare.guji_welfare_e_android.databinding.ItemGuardiaInformationBinding
+import com.guji.welfare.guji_welfare_e_android.start.screen.toFormatPhoneNumber
 import com.guji.welfare.guji_welfare_e_android.util.OnSingleClickListener
 
 class GuardianInformationListAdapter :
@@ -16,7 +17,7 @@ class GuardianInformationListAdapter :
     override fun action(data: Guardian, binding: ItemGuardiaInformationBinding) {
         with(binding) {
             name.text = data.name
-            phoneNumber.text = data.telephoneNum
+            phoneNumber.text = data.telephoneNum.toFormatPhoneNumber()
             relationship.text = data.info
         }
     }

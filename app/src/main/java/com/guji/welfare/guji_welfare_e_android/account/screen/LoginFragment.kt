@@ -92,6 +92,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AccountViewModel>(
                         App.prefs.autoLogin = false
                         App.prefs.accessToken = accountToken
                     }
+                    App.prefs.myDwelling
+                    App.prefs.myName
+                    App.prefs.myNickname
+                    App.prefs.myBirthday
 
                     Intent(context, MainActivity::class.java).also {
                         startActivity(it)

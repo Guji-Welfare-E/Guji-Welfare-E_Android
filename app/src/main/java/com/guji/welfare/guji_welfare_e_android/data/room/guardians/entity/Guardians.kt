@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Guardians(
-    @PrimaryKey()
+    @PrimaryKey
     val index: Int,
     @ColumnInfo("name")
     val name: String,

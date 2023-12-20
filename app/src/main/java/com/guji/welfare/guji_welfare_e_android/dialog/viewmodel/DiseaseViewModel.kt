@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseasesDto
+import com.guji.welfare.guji_welfare_e_android.data.dto.user.Guardian
 import com.guji.welfare.guji_welfare_e_android.data.network.RetrofitClient.api
 import com.guji.welfare.guji_welfare_e_android.data.room.AppDatabase
 import com.guji.welfare.guji_welfare_e_android.data.room.disease.entity.Disease
@@ -24,13 +25,15 @@ class DiseaseViewModel(application: Application) : AndroidViewModel(application)
         diseaseRepository = DiseaseRepository(diseaseDao)
     }
 
-    private val _disease = MutableLiveData<List<Disease>>()
-    val disease: LiveData<List<Disease>> = _disease
+    private val _disease = MutableLiveData<List<DiseasesDto>>()
+    val disease: LiveData<List<DiseasesDto>> = _disease
 
     fun insertData(disease: Disease) {
         CoroutineScope(Dispatchers.IO).launch {
             diseaseRepository.insertData(disease)
-            _disease.postValue(diseaseRepository.getData())
+            _disease.postValue(diseaseRepository.getData().map {
+                DiseasesDto(it.date, it.name)
+            })
         }
     }
 
@@ -42,13 +45,25 @@ class DiseaseViewModel(application: Application) : AndroidViewModel(application)
         return size
     }
 
+    fun updateDiseaseData(data: List<Disease>) {
+        _disease.postValue(data.map {
+            DiseasesDto(it.date, it.name)
+        })
+    }
 
     //사용자의 질병 일관 변경
-    fun updateGuardiansData(diseasesDto: List<DiseasesDto>) = viewModelScope.launch {
+    fun updateDiseaseData(diseasesDto: List<DiseasesDto>) = viewModelScope.launch {
         kotlin.runCatching {
             api.updateDiseasesData(diseasesDto)
         }.onSuccess {
-
+            when (it.status) {
+                200 -> {
+                    _disease.postValue(diseasesDto)
+                }
+                else -> {
+                    Log.d("updateDiseaseData",it.toString())
+                }
+            }
         }.onFailure { e ->
             Log.d("애러", e.message.toString() + " updateGuardiansData")
         }

@@ -22,7 +22,13 @@ class GuardianViewModel: BaseViewModel() {
         kotlin.runCatching {
             api.updateGuardiansData(data)
         }.onSuccess {
-
+            when(it.status){
+                200 -> {
+                    updateGuardiansData(data.map{
+                        Guardian(name = it.name, index = it.index, info = it.info, telephoneNum = it.telephoneNum)
+                    })
+                }
+            }
         }.onFailure {
 
         }

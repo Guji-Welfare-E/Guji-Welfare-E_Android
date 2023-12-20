@@ -2,8 +2,10 @@ package com.guji.welfare.guji_welfare_e_android.main.screen
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.fonts.Font
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,10 +16,10 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.guji.welfare.guji_welfare_e_android.R
-import com.guji.welfare.guji_welfare_e_android.base.BaseActivity
 import com.guji.welfare.guji_welfare_e_android.App
+import com.guji.welfare.guji_welfare_e_android.R
 import com.guji.welfare.guji_welfare_e_android.account.screen.AccountActivity
+import com.guji.welfare.guji_welfare_e_android.base.BaseActivity
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.DiseaseDisorder
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.Guardian
 import com.guji.welfare.guji_welfare_e_android.data.dto.user.UserDataDto
@@ -28,12 +30,13 @@ import com.guji.welfare.guji_welfare_e_android.data.room.guardians.entity.Guardi
 import com.guji.welfare.guji_welfare_e_android.databinding.ActivityMainBinding
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogChangePersonalInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogCheckChangePassword
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogDisease
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogDiseaseAdd
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardanInformationFix
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformation
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogGuardianInformationAdd
-import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectNickName
-import com.guji.welfare.guji_welfare_e_android.dialog.DialogDiseaseAdd
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectCall
+import com.guji.welfare.guji_welfare_e_android.dialog.DialogSelectNickName
 import com.guji.welfare.guji_welfare_e_android.dialog.DialogWelfareworkerRegistration
 import com.guji.welfare.guji_welfare_e_android.main.adapter.DiseaseDisorderInformationListAdapter
 import com.guji.welfare.guji_welfare_e_android.main.adapter.GuardianInformationListAdapter
@@ -41,6 +44,7 @@ import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.DiseaseDi
 import com.guji.welfare.guji_welfare_e_android.main.adapter.decoration.GuardianInformationDecoration
 import com.guji.welfare.guji_welfare_e_android.main.service.TimeCheckService
 import com.guji.welfare.guji_welfare_e_android.main.viewmodel.MainViewModel
+import com.guji.welfare.guji_welfare_e_android.start.screen.toFormatPhoneNumber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,8 +75,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        serviceStart()
         installSplashScreen()
-
         setAdapter()
 
         val behavior = BottomSheetBehavior.from(binding.bottomSheet)
@@ -80,18 +84,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
         ActivityCompat.requestPermissions(this, permission, 0)
     }
-
+//toFormatPhoneNumber
     override fun start() {
         roomDB = AppDatabase.getInstance(this)
         viewModel.getUserData()
+        with(binding){
+            textMyDwelling.text = App.prefs.myDwelling
+            textMyName.text =  App.prefs.myName
+            textMyNickname.text= App.prefs.myNickname
+        }
 
         viewModel.userData.observe(this@MainActivity) {
             updateInformationUI(it)
             updateInformation(it)
-            if(it.data.disease != null){
+            if (it.data.disease != null) {
                 updateDiseaseUI(it.data.disease)
             }
-            if(it.data.guardian != null){
+            if (it.data.guardian != null) {
                 updateGuardianUI(it.data.guardian)
             }
         }
@@ -103,8 +112,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         updateWelfareworkerUI()
 
 //        refresh()
-
-        serviceStart()
         setClickListener()
         switch()
 
@@ -112,7 +119,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             disease.observe(this@MainActivity) {
                 Log.d("질병", it.toString())
                 diseaseDisorderInformationData = it.map { diseaseData ->
-                    DiseaseDisorder(diseaseData.name, diseaseData.date)
+                    DiseaseDisorder(diseaseData.name, diseaseData.createTime)
                 }
                 updateDiseaseUI(diseaseDisorderInformationData)
             }
@@ -201,10 +208,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
-
-    /**
-     *
-     * */
     private suspend fun setOffline() {
         CoroutineScope(Dispatchers.IO).launch {
             //RoomDB에 저장 되어 있는 값 꺼내오기
@@ -288,6 +291,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
             buttonClose.setOnClickListener { drawer.closeDrawer(GravityCompat.END) }
             buttonMenu.setOnClickListener { drawer.openDrawer(GravityCompat.END) }
 
+            buttonAnnoucement.setOnClickListener { webSite("https://www.dalseong.daegu.kr/guji/index.do") }
+
             //Add
             buttonGuardianAdd.setOnClickListener { setDialogGuardianInformationAdd() }
             buttonWelfareWorkerAdd.setOnClickListener { setDialogWelfareworkerRegistration() }
@@ -318,8 +323,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                     switchDiseaseDisorderInformationStatus.value =
                         switchDiseaseDisorderInformation.isChecked
                 }
-
             }
+
+            buttonHome.setOnClickListener { webSite("https://www.myhome.go.kr/") }
+            buttonMoney.setOnClickListener { webSite("https://kinfa.or.kr/index.jsp") }
+            buttonHospital.setOnClickListener {
+                val dialogSelectCall = DialogSelectCall("119")
+                with(dialogSelectCall) {
+                    isCancelable = false
+                    show(this@MainActivity.supportFragmentManager, "selectCall")
+                }
+            }
+            buttonCounselor.setOnClickListener { webSite("https://www.bokjiro.go.kr/ssis-tbu/index.do") }
 
             //drawer button
             buttonChangeNickname.setOnClickListener { setDialogNickname(App.prefs.myNickname) }
@@ -363,7 +378,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                 layoutWelfareWorkerNull.visibility = View.GONE
                 layoutWelfareWorker.visibility = View.VISIBLE
                 textWelfareWorkerName.text = userDataDto.data.manager.name
-                textWelfareWorkerPhoneNumber.text = userDataDto.data.manager.telephoneNum
+                textWelfareWorkerPhoneNumber.text =
+                    userDataDto.data.manager.telephoneNum.toFormatPhoneNumber()
                 textWelfareWorkerAffiliation.text = userDataDto.data.manager.belong
             } else {
                 layoutWelfareWorkerNull.visibility = View.VISIBLE
@@ -389,10 +405,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun updateDiseaseUI(diseaseDisorderData: List<DiseaseDisorder>) {
+        Log.d("질병 내용",diseaseDisorderData.toString())
+        Log.d("질병 내용",diseaseDisorderInformationData.toString())
         with(binding) {
             if (diseaseDisorderData.isNullOrEmpty()) {
                 emptyDiseaseDisorder.visibility = View.VISIBLE
+                recyclerViewDiseaseDisorder.visibility = View.GONE
             } else {
+                recyclerViewDiseaseDisorder.visibility = View.VISIBLE
                 emptyDiseaseDisorder.visibility = View.GONE
                 diseaseDisorderInformationListAdapter.submitList(diseaseDisorderData)
             }
@@ -419,7 +439,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         val name = data.name
         val relationship = data.info
         val phoneNumber = data.telephoneNum
-        val dialogGuardianInformation = DialogGuardianInformation(name, relationship, phoneNumber)
+        val dialogGuardianInformation =
+            DialogGuardianInformation(name, relationship, phoneNumber, position, roomDB)
         with(dialogGuardianInformation) {
             isCancelable = false
             show(this@MainActivity.supportFragmentManager, "guardianInformation")
@@ -503,6 +524,22 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         }
     }
 
+    private fun setDialogDisease(position: Int) {
+        Log.d("질병 내용",position.toString())
+        val data = diseaseDisorderInformationData[position]
+        val dialogDisease = DialogDisease(data.name, data.createTime, position, roomDB)
+        with(dialogDisease) {
+            isCancelable = false
+            show(this@MainActivity.supportFragmentManager, "disease")
+        }
+    }
+
+    private fun webSite(url: String) {
+        Intent(Intent.ACTION_VIEW, Uri.parse(url)).also {
+            startActivity(it)
+        }
+    }
+
 
     private fun logout() {
         App.prefs.remove()
@@ -527,7 +564,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
 
     override fun onClickDieaseInformation(v: View, position: Int) {
-        Log.d("질병/장애 정보", position.toString())
+        Log.d("질병 내용", position.toString())
+        setDialogDisease(position)
     }
 
     override fun onClick(v: View, position: Int) {

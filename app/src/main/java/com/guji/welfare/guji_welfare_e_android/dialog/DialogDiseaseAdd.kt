@@ -49,8 +49,8 @@ class DialogDiseaseAdd(private val roomDB: AppDatabase?) :
         viewModel.insertData(Disease(dataSize, disease, date))
 
         if (NetworkManager.checkNetworkState(requireContext())) {
-            Log.d("질병","추가")
-            viewModel.updateGuardiansData(roomDB!!.diseaseDao().getAll().map {
+            Log.d("질병 내용","추가")
+            viewModel.updateDiseaseData(roomDB!!.diseaseDao().getAll().map {
                 DiseasesDto(it.date, it.name)
             })
         }
