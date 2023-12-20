@@ -25,6 +25,7 @@
                 android:fontFamily="@font/pretendard_bold"
                 android:text=""
                 android:textColor="@color/black"
+                android:maxLength="7"
                 android:textSize="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
