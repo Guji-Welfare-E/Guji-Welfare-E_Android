@@ -84,14 +84,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
         ActivityCompat.requestPermissions(this, permission, 0)
     }
-//toFormatPhoneNumber
+
+    //toFormatPhoneNumber
     override fun start() {
         roomDB = AppDatabase.getInstance(this)
         viewModel.getUserData()
-        with(binding){
+        with(binding) {
             textMyDwelling.text = App.prefs.myDwelling
-            textMyName.text =  App.prefs.myName
-            textMyNickname.text= App.prefs.myNickname
+            textMyName.text = App.prefs.myName
+            textMyNickname.text = App.prefs.myNickname
         }
 
         viewModel.userData.observe(this@MainActivity) {
@@ -139,34 +140,34 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
         AppDatabase.destroyInstance()
     }
 
-    private fun refresh() {
-        binding.refreshLayout.setOnRefreshListener {
-            if (!isNetworkConnected(this@MainActivity)) {
-                Toast.makeText(this, "네트워크에 연결 해주세요", Toast.LENGTH_SHORT).show()
-                binding.refreshLayout.isRefreshing = false
-            } else {
-                with(viewModel) {
-                    getUserData()
-                    userData.observe(this@MainActivity) {
-                        updateInformationUI(it)
-                        updateInformation(it)
-                    }
-
-                    if (userData.value != null) {
-                        updateInformation(userData.value!!)
-                        updateInformationUI(userData.value!!)
-                    }
-                }
-
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    //RoomDB에 저장 되어 있는 값 꺼내오기
-                    setOffline()
-                }
-                binding.refreshLayout.isRefreshing = false
-            }
-        }
-    }
+//    private fun refresh() {
+//        binding.refreshLayout.setOnRefreshListener {
+//            if (!isNetworkConnected(this@MainActivity)) {
+//                Toast.makeText(this, "네트워크에 연결 해주세요", Toast.LENGTH_SHORT).show()
+//                binding.refreshLayout.isRefreshing = false
+//            } else {
+//                with(viewModel) {
+//                    getUserData()
+//                    userData.observe(this@MainActivity) {
+//                        updateInformationUI(it)
+//                        updateInformation(it)
+//                    }
+//
+//                    if (userData.value != null) {
+//                        updateInformation(userData.value!!)
+//                        updateInformationUI(userData.value!!)
+//                    }
+//                }
+//
+//
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    //RoomDB에 저장 되어 있는 값 꺼내오기
+//                    setOffline()
+//                }
+//                binding.refreshLayout.isRefreshing = false
+//            }
+//        }
+//    }
 
     private fun updateInformation(userDataDto: UserDataDto) {
         Log.d("updateInformation", userDataDto.toString())
@@ -300,10 +301,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
 
             //call
             buttonWelfareWorkerCall.setOnClickListener { setDialogSelectCall(App.prefs.welfareWorkerPhoneNumber) }
+            call129.setOnClickListener {
+                val dialogSelectCall = DialogSelectCall("129")
+                with(dialogSelectCall) {
+                    isCancelable = false
+                    show(this@MainActivity.supportFragmentManager, "selectCall")
+                }
+            }
 
             //switch
             switchAutoBackground.setOnClickListener {
-                //TODO("시간 마다 배경화면 변경 아 하기 싫다")
+                //TODO("시간 마다 배경화면")
             }
 
             with(viewModel) {
@@ -325,7 +333,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
                 }
             }
 
-            buttonHome.setOnClickListener { webSite("https://www.myhome.go.kr/") }
+            buttonHome.setOnClickListener { webSite("https://www.myhome.go.kr") }
             buttonMoney.setOnClickListener { webSite("https://kinfa.or.kr/index.jsp") }
             buttonHospital.setOnClickListener {
                 val dialogSelectCall = DialogSelectCall("119")
@@ -405,8 +413,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun updateDiseaseUI(diseaseDisorderData: List<DiseaseDisorder>) {
-        Log.d("질병 내용",diseaseDisorderData.toString())
-        Log.d("질병 내용",diseaseDisorderInformationData.toString())
+        Log.d("질병 내용", diseaseDisorderData.toString())
+        Log.d("질병 내용", diseaseDisorderInformationData.toString())
         with(binding) {
             if (diseaseDisorderData.isNullOrEmpty()) {
                 emptyDiseaseDisorder.visibility = View.VISIBLE
@@ -525,7 +533,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(R.layout.a
     }
 
     private fun setDialogDisease(position: Int) {
-        Log.d("질병 내용",position.toString())
+        Log.d("질병 내용", position.toString())
         val data = diseaseDisorderInformationData[position]
         val dialogDisease = DialogDisease(data.name, data.createTime, position, roomDB)
         with(dialogDisease) {
